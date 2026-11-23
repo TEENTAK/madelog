@@ -10,6 +10,7 @@
 - 배포: Cloudflare Workers(정적 자산, `wrangler.jsonc`) → https://madelog.teentak.workers.dev. GitHub `TEENTAK/madelog`의 `main`에 push하면 Workers Builds가 `npm run build` → `npx wrangler deploy`를 자동 실행한다. 미디어는 R2 버킷 `madelog-media`(공개 개발 URL, 주소는 `.env.production`의 `PUBLIC_MEDIA_BASE_URL`)에서 불러온다. 도메인은 아직 없다(구입하면 R2 사용자 지정 도메인·Workers 도메인과 `astro.config.mjs`의 `site`, `.env.production`을 바꾼다).
 - 미디어를 추가·변경하면 `npm run upload-media -- madelog-media`로 R2에 올린다(코드 push와 별개). 로컬에서 바로 배포할 때는 `npm run deploy`(빌드 후 `dist/media` 제거). 처음엔 `npx wrangler login`이 필요하다.
 - 콘텐츠(`content/`)만 고쳐도 push해야 사이트에 반영된다.
+- **R2 저장 용량은 9GB를 넘기지 않는다**(무료 한도 10GB-month, 초과 시 자동 과금). `upload-media.sh`가 `media-local` 크기를 확인해 9GB 초과 시 중단하고 7.2GB 초과 시 경고한다. 영상·이미지를 크게 추가하기 전에 현재 용량을 먼저 알리고, 원본이 아닌 웹용 변환본만 올린다. R2에서 지운 파일은 `media-local`에서도 지워 둘 것(스크립트는 삭제를 반영하지 않는다).
 
 ## 폴더 구조
 ```
