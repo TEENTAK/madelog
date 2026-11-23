@@ -7,7 +7,9 @@
 - `npm run dev` → http://localhost:4321 · `npm run build` · `npm run preview`
 - `npm run new-work -- <작품 폴더> [--slug 이름] [--yes] [--force]` — 새 영상 작품 추가(아래 참고)
 - `npm run sync-notion -- [--dry] [--force] [--photo=값]` — Notion DB의 이미지·프롬프트를 `content/images/`로 가져온다(아래 참고). 토큰은 `.env`의 `NOTION_TOKEN`(Git 제외, 채팅·로그에 출력 금지)
-- 공개(배포)는 아직 정하지 않았다. 도메인이 없고, Cloudflare Pages·R2는 후보일 뿐 확정이 아니다. 개발은 전부 로컬에서 한다.
+- 배포: Cloudflare Workers(정적 자산, `wrangler.jsonc`) → https://madelog.teentak.workers.dev. GitHub `TEENTAK/madelog`의 `main`에 push하면 Workers Builds가 `npm run build` → `npx wrangler deploy`를 자동 실행한다. 미디어는 R2 버킷 `madelog-media`(공개 개발 URL, 주소는 `.env.production`의 `PUBLIC_MEDIA_BASE_URL`)에서 불러온다. 도메인은 아직 없다(구입하면 R2 사용자 지정 도메인·Workers 도메인과 `astro.config.mjs`의 `site`, `.env.production`을 바꾼다).
+- 미디어를 추가·변경하면 `npm run upload-media -- madelog-media`로 R2에 올린다(코드 push와 별개). 로컬에서 바로 배포할 때는 `npm run deploy`(빌드 후 `dist/media` 제거). 처음엔 `npx wrangler login`이 필요하다.
+- 콘텐츠(`content/`)만 고쳐도 push해야 사이트에 반영된다.
 
 ## 폴더 구조
 ```
@@ -48,7 +50,7 @@ scripts/sync-notion.mjs           Notion 동기화
 1. (완료) 프롬프트 `.txt` 변환과 클립 연결. `toward-summer-sea`는 원문이 없어 프롬프트·`refs`를 비워 둔다(원문이 생기면 `prompts/`에 넣고 클립에 `prompt`·`refs` 추가).
 2. 모바일·태블릿 히어로 모션(명세 §10), 카운터 숫자별 시차.
 3. 이미지가 늘면 태그 필터 줄 추가, 다른 Notion 사진 종류 가져오기(`--photo=`).
-4. 공개 방식: 도메인 없음 → 우선 `workers.dev`, 미디어는 Cloudflare R2(`PUBLIC_MEDIA_BASE_URL`, `r2.dev` 임시 사용 가능), 도메인은 나중에 구매. Cloudflare 계정·배포는 아직 안 했다. `site`·OG 절대 주소는 공개 주소가 정해지면 채운다.
+4. 도메인 구입 후 R2 사용자 지정 도메인(`r2.dev`은 요청 수 제한이 있어 임시용)과 사이트 주소로 교체. 휴대폰 화면 점검.
 5. 캔버스의 푸터 이메일·마퀴 자리표시값을 실제 값으로 맞추기(선택).
 
 ## 작업 규칙
