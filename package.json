@@ -9,6 +9,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "new-work": "node scripts/new-work.mjs",
+    "deploy": "astro build && rm -rf dist/media && npx wrangler deploy",
+    "upload-media": "bash scripts/upload-media.sh",
     "sync-notion": "node --env-file=.env scripts/sync-notion.mjs"
   },
   "dependencies": {
