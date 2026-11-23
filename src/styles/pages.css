@@ -151,3 +151,25 @@ img.lb-fg{width:auto}
 .tile[hidden]{display:none}
 .tile.sk .im{color:transparent}
 .tile.sk .ov{opacity:0}
+
+/* 터치 기기(hover 없음): 손가락을 떼도 hover 상태가 남는 문제를 막고,
+   hover 효과(들어올림·확대·오버레이) 대신 누르는 동안 살짝 작아지게 한다.
+   design-system.css 는 건드리지 않고 여기서 덮어쓴다(같은 우선순위, 나중 선언이 이김). */
+@media (hover: none) {
+  .card:hover{transform:none}
+  .card:hover .im,.tile:hover .im{transform:none;filter:saturate(.88) contrast(1.05)}
+  .vwin:hover .im,.vwin:hover .hero-video{transform:none}
+  .card:hover .lb-fg{transform:translate(-50%,-50%)}
+  .tile:hover:not(:focus-visible) .ov{opacity:0}
+  .pill:hover,.chip:hover{background:var(--white)}
+  .pill.on:hover,.chip.on:hover{background:var(--ink)}
+  .pill--primary:hover,.chip--primary:hover{background:var(--primary)}
+
+  .card,.tile,.vwin{transition:transform var(--t-fast) var(--ease)}
+  .card:active,.tile:active{transform:scale(.97)}
+  .vwin:active{transform:scale(.98)}
+  .card:active .im,.tile:active .im{transform:none}
+  .card:active .lb-fg{transform:translate(-50%,-50%)}
+  .pill.on:active,.chip.on:active{background:var(--ink)}
+  .pill--primary:active,.chip--primary:active{background:var(--primary-press)}
+}
