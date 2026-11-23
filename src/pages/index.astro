@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import VideoCard from '../components/VideoCard.astro';
+import ImageTile from '../components/ImageTile.astro';
+import { getWorks, pickFeatured, posterUrl, ratioOf, fmtDur, fmtDate, cardDuration, tagClass } from '../lib/works';
+import { workMedia } from '../lib/media';
+import { getImages, toColumns } from '../lib/images';
+import { site } from '../site';
+
+const works = await getWorks();
+const images = await getImages();
+const clipCount = works.reduce((n, w) => n + w.data.clips.length, 0);
+const featured = pickFeatured(works);
+const fr = featured ? ratioOf(featured) : 16 / 9;
+const letterbox = Math.abs(fr - 16 / 9) > 0.02;
+// 모션용 대표 영상: 가로 16:9 완성본만 재생(그 외는 포스터 유지)
+const heroVideo = featured && !letterbox && featured.data.final ? workMedia(featured.id, featured.data.final) : undefined;
+const films = works.slice(0, 6);
+// 전체 탭 이미지: 최신순 12개 + featured 앞에 고정
+const stills = [...images.filter((i) => i.data.featured), ...images.filter((i) => !i.data.featured)].slice(0, 12);
+const cols = toColumns(stills, 4);
+const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
+---
+<Base current="all" image={featured ? posterUrl(featured) : undefined}>
+  <script is:inline slot="head">
+    // 진입 연출 여부를 첫 페인트 전에 정한다(해시가 있거나 이미 스크롤됐으면 생략, 재방문이면 짧게)
+    (function () {
+      try {
+        if (location.hash || window.scrollY > 4 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var r = document.documentElement.classList;
+        r.add('hm-intro');
+        if (sessionStorage.getItem('hm-seen')) r.add('hm-fast');
+        sessionStorage.setItem('hm-seen', '1');
+      } catch (e) {}
+    })();
+  </script>
+  <div class="motion-track" data-motion>
+    <section class="hero hero-home motion-stage">
+      <div class="hero-ghost" aria-hidden="true">MADE.LOG</div>
+      <div class="w hero-in">
+        <div class="hero-tx">
+          <div class="eyebrow hl" data-l="eyebrow">ALL WORKS · {works.length + images.length}</div>
+          <h1 class="hl"><span class="hw" data-l="w0">Every</span><span class="hw" data-l="w1">frame,</span><span class="hw ol" data-l="w2">made.</span></h1>
+          <p class="hero-sub hl" data-l="sub">만든 것의 기록. 영상과 이미지를 최신순으로 모았습니다.</p>
+        </div>
+        <div class="hero-feat">
+          {featured && (
+            <a class:list={['vwin', 'hl', letterbox && 'lb']} data-l="vwin" href={`/p/${featured.id}`} style={`--fa:${fr.toFixed(4)}`} aria-label={`대표작 ${featured.data.title} 보기`}>
+              <img class="im" src={posterUrl(featured)} alt="" />
+              {letterbox && <img class:list={['lb-fg', fr > 16 / 9 && 'lb-fg--wide']} src={posterUrl(featured)} alt="" />}
+              {heroVideo && <video class="hero-video" data-src={heroVideo} poster={posterUrl(featured)} muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>}
+              <div class="vwin__scrim" aria-hidden="true"></div>
+              <div class="vwin__tags">
+                <span class="tag tag--new">{featured.data.featured ? 'FEATURED' : 'LATEST'}</span>
+                {featured.data.model.map((m) => <span class="tag tag--model">{m}</span>)}
+              </div>
+              <div class="vwin__play" aria-hidden="true">▶</div>
+              <div class="vwin__time"><span>{featured.data.title}</span><span>{fmtDur(cardDuration(featured))}</span></div>
+            </a>
+          )}
+          <dl class="stats hl" data-l="stats">
+            <div><dt>영상</dt><dd>{works.length}</dd></div>
+            <div><dt>이미지</dt><dd>{images.length}</dd></div>
+            <div><dt>클립</dt><dd>{clipCount}</dd></div>
+            <a href="/videos" class="more">전체 보기 →</a>
+          </dl>
+        </div>
+      </div>
+      {featured && (
+        <div class="featured-info hl" data-l="info">
+          <div class="eyebrow">{featured.data.featured ? 'FEATURED' : 'LATEST'} · {fmtDate(featured.data.date)}</div>
+          <h2 class="disp">{featured.data.title}</h2>
+          <div class="dt">
+            {featured.data.tags.map((t) => <span class={`tag ${tagClass(t)}`}>{t}</span>)}
+            {featured.data.model.map((m) => <span class="tag tag--model">{m}</span>)}
+          </div>
+          <p class="hero-sub">{featured.data.summary || `${fmtDur(cardDuration(featured))} · 클립 ${featured.data.clips.length}`}</p>
+          <a class="pill pill--primary" href={`/p/${featured.id}`}>작품 보기 →</a>
+        </div>
+      )}
+      <div class="hero-cue" data-l="cue" aria-hidden="true">↓</div>
+    </section>
+  </div>
+
+  <div class="mq" aria-hidden="true">
+    <div class="mq-t">{repeat(site.models.video).map((m, i) => <span class={i % 2 ? 's' : undefined}>{m}</span>)}</div>
+    <div class="mq-t r">{repeat(site.models.image).map((m, i) => <span class={i % 2 ? 's' : undefined}>{m}</span>)}</div>
+  </div>
+
+  <main class="w" style="padding-top:56px;padding-bottom:80px;display:flex;flex-direction:column;gap:80px">
+    <section aria-label="최근 영상">
+      <div class="sec-h"><h2 class="disp">Films</h2><span class="mono">영상 · {works.length}</span><a class="mail" href="/videos">영상 전체 보기 →</a></div>
+      {films.length ? (
+        <div class="vgrid" data-grid-home>{films.map((w) => <VideoCard work={w} eager />)}</div>
+      ) : (
+        <p class="empty"><b>아직 영상이 없습니다</b>첫 작품을 추가하면 여기에 나타납니다.</p>
+      )}
+    </section>
+    <section aria-label="최근 이미지">
+      <div class="sec-h"><h2 class="disp">Stills</h2><span class="mono">이미지 · {images.length}</span><a class="mail" href="/images">이미지 전체 보기 →</a></div>
+      {stills.length ? (
+        <div class="masonry">{cols.map((col) => <div class="mc">{col.map((i) => <ImageTile item={i} />)}</div>)}</div>
+      ) : (
+        <p class="empty"><b>아직 이미지가 없습니다</b>화보를 추가하면 여기에 나타납니다.</p>
+      )}
+    </section>
+  </main>
+  <script>
+    import { bindPreview } from '../scripts/preview';
+    import { initHeroMotion } from '../scripts/hero-motion';
+    bindPreview();
+    initHeroMotion();
+  </script>
+</Base>

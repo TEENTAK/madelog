@@ -1,0 +1,55 @@
+---
+import '../styles/design-system.css';
+import '../styles/pages.css';
+import { site } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  current?: 'all' | 'video' | 'image';
+  image?: string;
+}
+const { title, description = site.description, current, image } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.description}`;
+const nav = [
+  { key: 'all', href: '/', label: '전체' },
+  { key: 'video', href: '/videos', label: '영상' },
+  { key: 'image', href: '/images', label: '이미지' },
+];
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={image} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+    <slot name="head" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter+Tight:wght@700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="w">
+          <a href="/" class="brand" aria-label={site.name}>MADE<i class="dot"></i>LOG</a>
+          <nav aria-label="주 메뉴">
+            {nav.map((n) => <a href={n.href} class={n.key === current ? 'on' : undefined} aria-current={n.key === current ? 'page' : undefined}>{n.label}</a>)}
+          </nav>
+        </div>
+      </header>
+      <slot />
+      <footer class="site-footer">
+        <div class="w">
+          <span class="mono">© {new Date().getFullYear()} {site.name}</span>
+          <a class="mail" href={`mailto:${site.email}`}>{site.email.toUpperCase()}</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+# 태그 사전 한 곳에서 장르 → 색 이름을 연결한다.
+# 연결이 없는 태그는 회색(tag--model)으로 나온다. 시안의 장르명은 임시값.
+# 색 이름: lime(연두) · lavender(라벤더) · peach(복숭아) · sky(하늘색) · mint · sand
+genres:
+  SF: lavender
+  로맨스: peach
+  코미디: lime
+  판타지: sky
+  일상: mint
+  드라마: sand
+  시트콤: peach
+  애니메이션: sky
+  VLOG: mint

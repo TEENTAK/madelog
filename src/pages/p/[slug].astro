@@ -1,0 +1,201 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getWorks, tagClass, fmtDate, fmtDur, totalDuration, cardDuration, posterUrl, ratioOf } from '../../lib/works';
+import { workMedia } from '../../lib/media';
+import ViewerLayer from '../../components/ViewerLayer.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return works.map((work, i) => ({
+    params: { slug: work.id },
+    props: { work, prev: works[i + 1], next: works[i - 1] },
+  }));
+}
+
+const { work, prev, next } = Astro.props;
+const d = work.data;
+const { Content } = await render(work);
+const hasMaking = (work.body ?? '').replace(/<!--[\s\S]*?-->/g, '').trim().length > 0;
+const r = ratioOf(work);
+
+// 재생 목록: 완성본(있으면) → 클립들
+const sources = [
+  ...(d.final ? [{ key: 'final', label: '최종본', src: workMedia(work.id, d.final), ar: r }] : []),
+  ...d.clips.map((c, i) => {
+    const [w, h] = (c.해상도 ?? `${d.width}x${d.height}`).split('x').map(Number);
+    return { key: `clip-${i}`, label: c.title, src: workMedia(work.id, c.video), ar: w / h };
+  }),
+];
+const first = sources[0];
+const refs = d.references;
+
+// 프롬프트: .txt/.md 만 화면에 보여 준다(.rtf 등은 변환 전이라 제외)
+const readPrompt = (file?: string) => {
+  if (!file || !/\.(txt|md)$/i.test(file)) return '';
+  try { return fs.readFileSync(path.join(process.cwd(), 'content/works', work.id, 'prompts', file), 'utf8').trim(); } catch { return ''; }
+};
+const dim = (v?: string) => (v ?? '').replace('x', ' × ');
+const refItems = refs.map((r) => ({
+  kind: 'image', title: r.name, label: r.type, src: workMedia(work.id, r.image), prompt: r.prompt ?? '',
+  details: [['모델/도구', r.tool ?? ''], ['품질', r.품질 ?? ''], ['해상도', dim(r.해상도)], ['비율', r.비율 ?? ''], ['생성일', r.생성일 ? fmtDate(r.생성일) : '']],
+}));
+const clipItems = d.clips.map((c) => ({
+  kind: 'video', title: c.title, label: '생성 결과', src: workMedia(work.id, c.video), prompt: readPrompt(c.prompt),
+  refs: (c.refs ?? []).map((no) => refs.find((r) => r.no === no)).filter(Boolean).map((r) => ({ no: r!.no, name: r!.name, src: workMedia(work.id, r!.image) })),
+  details: [['모델명', d.model.join(', ')], ['길이', c.길이 ? fmtDur(c.길이) : ''], ['해상도', dim(c.해상도)], ['생성일', c.날짜 ? fmtDate(c.날짜) : '']],
+}));
+---
+<Base title={d.title} description={d.summary || undefined} current="video" image={posterUrl(work)}>
+  <main class="w" style="padding-top:32px;padding-bottom:80px">
+    <a href="/videos" class="mono back">← 작품 목록</a>
+
+    <section class="d-head">
+      <div>
+        <div class="tags" style="flex-wrap:wrap">
+          <span class="tag tag--type">영상</span>
+          {d.model.map((m) => <span class="tag tag--model">{m}</span>)}
+          {d.tags.map((t) => <span class={`tag ${tagClass(t)}`}>{t}</span>)}
+          <span class="tag tag--model">{fmtDate(d.date)}</span>
+        </div>
+        <h1 class="ttl">{d.title}</h1>
+        {d.summary && <p class="sum">{d.summary}</p>}
+      </div>
+      <button class="pill" id="copy-link" type="button">공유 링크 복사</button>
+    </section>
+
+    <section aria-label="영상 재생">
+      <div class="player" id="player" style={`--ar:${first.ar.toFixed(4)}`}>
+        <video id="player-video" src={first.src} poster={posterUrl(work)} controls playsinline preload="metadata"></video>
+        <span class="player__label" id="player-label">{first.label}</span>
+      </div>
+      {sources.length > 1 && (
+        <div class="switch" role="group" aria-label="영상 선택">
+          {sources.map((s, i) => (
+            <button class="pill" type="button" data-src={s.src} data-ar={s.ar.toFixed(4)} data-label={s.label} aria-pressed={String(i === 0)} class:list={[i === 0 && 'on']}>{s.label}</button>
+          ))}
+        </div>
+      )}
+      <div class="dstats">
+        <div><b>{d.model.join(', ') || '—'}</b><span>모델</span></div>
+        <div><b>{Math.round(d.final ? cardDuration(work) : totalDuration(work))}초</b><span>{d.final ? '완성본 길이' : '총 길이'}</span></div>
+        <div><b>{d.clips.length}</b><span>클립</span></div>
+        <div><b>{refs.length}</b><span>References</span></div>
+      </div>
+    </section>
+
+    {hasMaking && (
+      <section class="sec making">
+        <h2 class="h2">Making</h2>
+        <div class="prose"><Content /></div>
+      </section>
+    )}
+
+    {refs.length > 0 && (
+      <section class="sec">
+        <h2 class="h2">References</h2>
+        <div class="g6">
+          {refs.map((ref) => (
+            <button type="button" class="refbtn" data-ref={String(ref.no - 1)} aria-haspopup="dialog">
+              <div class="sq"><img src={workMedia(work.id, ref.image)} alt={`${ref.name} (${ref.type})`} loading="lazy" decoding="async" /><span class="bd">{ref.no}</span></div>
+              <div class="refname">{ref.name}</div>
+              <div class="mono">{ref.type}{ref.비율 ? ` · ${ref.비율}` : ''}</div>
+            </button>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="sec">
+      <h2 class="h2">Video Clip</h2>
+      <div class="g4c">
+        {d.clips.map((c, i) => (
+          <button type="button" class="card card--md clipbtn" data-clip={String(i)} aria-haspopup="dialog">
+            <div class="media" style="--ar:1.6"><video src={workMedia(work.id, c.video)} preload="metadata" muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" aria-hidden="true"></video>{c.길이 && <span class="dur">{fmtDur(c.길이)}</span>}</div>
+            <h3>{c.title}</h3>
+            <p>{c.해상도 ?? ''}</p>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    {(prev || next) && (
+      <section class="sec">
+        <nav class="pager" aria-label="이전·다음 작품" style="display:flex;gap:0;font-weight:inherit">
+          {prev ? <a class="pill" href={`/p/${prev.id}`}>← 이전 작품</a> : <span></span>}
+          {next ? <a class="pill" href={`/p/${next.id}`}>다음 작품 →</a> : <span></span>}
+        </nav>
+      </section>
+    )}
+    <ViewerLayer id="mv-1" />
+    <ViewerLayer id="mv-2" />
+    <script type="application/json" id="mv-data" set:html={JSON.stringify({ refs: refItems, clips: clipItems })} />
+  </main>
+
+  <script>
+    const video = document.getElementById('player-video') as HTMLVideoElement | null;
+    const player = document.getElementById('player');
+    const label = document.getElementById('player-label');
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>('.switch [data-src]')];
+    buttons.forEach((b) => b.addEventListener('click', () => {
+      if (!video || !player) return;
+      video.pause();
+      video.removeAttribute('poster');
+      video.src = b.dataset.src!;
+      player.style.setProperty('--ar', b.dataset.ar!);
+      if (label) label.textContent = b.dataset.label ?? '';
+      buttons.forEach((x) => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); });
+      video.play().catch(() => {});
+    }));
+    document.getElementById('copy-link')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget as HTMLButtonElement;
+      try { await navigator.clipboard.writeText(location.href); btn.textContent = '복사했습니다'; }
+      catch { btn.textContent = '복사하지 못했습니다'; }
+      setTimeout(() => (btn.textContent = '공유 링크 복사'), 1800);
+    });
+    // ---- 뷰어 (레퍼런스·클립) ----
+    import { Layer, type VItem } from '../../scripts/viewer';
+    const raw = document.getElementById('mv-data');
+    if (raw) {
+      const data = JSON.parse(raw.textContent || '{}') as { refs: VItem[]; clips: VItem[] };
+      const L1 = new Layer(document.getElementById('mv-1')!), L2 = new Layer(document.getElementById('mv-2')!);
+      type S = { clip?: number; ref?: number }; // 1부터 시작
+      const parse = (): S => {
+        const m = location.hash.match(/^#(?:clip-(\d+))?\/?(?:ref-(\d+))?$/);
+        if (!m) return {};
+        const clip = m[1] ? +m[1] : undefined, ref = m[2] ? +m[2] : undefined;
+        return { clip: clip && clip <= data.clips.length ? clip : undefined, ref: ref && ref <= data.refs.length ? ref : undefined };
+      };
+      const hash = (s: S) => (s.clip || s.ref ? '#' + [s.clip ? `clip-${s.clip}` : '', s.ref ? `ref-${s.ref}` : ''].filter(Boolean).join('/') : location.pathname + location.search);
+      const push = (s: S) => { history.pushState({ mv: 1 }, '', hash(s)); render(); };
+      const back = (s: S) => { if (history.state?.mv) history.back(); else { history.replaceState(null, '', hash(s)); render(); } };
+      const replace = (s: S) => history.replaceState(history.state, '', hash(s));
+      const navClip = (i: number) => replace({ ...parse(), clip: i + 1 });
+      let lastOpener: HTMLElement | null = null;
+
+      const ensure = (L: Layer, items: VItem[], idx: number, opts: object, opener?: HTMLElement | null) => {
+        if (!L.isOpen || L.items !== items) L.open(items, idx, opts, opener);
+        else { L.opts = opts; if (L.cur !== idx) L.show(idx); }
+      };
+      function render() {
+        const s = parse();
+        const clipOpts = { counter: (a: number, n: number) => `클립 ${a} / ${n}`, onNavigate: navClip, onRef: (no: number) => push({ clip: parse().clip, ref: no }), onClose: () => back({}) };
+        const refOpts = (stacked: boolean) => ({ strip: true, counter: (a: number, n: number) => `레퍼런스 ${a} / ${n}`, onNavigate: (i: number) => replace({ ...parse(), ref: i + 1 }), onClose: () => back(stacked ? { clip: parse().clip } : {}) });
+        if (s.clip) {
+          ensure(L1, data.clips, s.clip - 1, clipOpts, lastOpener);
+          if (s.ref) ensure(L2, data.refs, s.ref - 1, refOpts(true));
+          else L2.close();
+        } else if (s.ref) {
+          L2.close(false);
+          ensure(L1, data.refs, s.ref - 1, refOpts(false), lastOpener);
+        } else { L2.close(false); L1.close(); }
+      }
+      document.querySelectorAll<HTMLButtonElement>('.refbtn').forEach((b) => b.addEventListener('click', () => { lastOpener = b; push({ ref: +b.dataset.ref! + 1 }); }));
+      document.querySelectorAll<HTMLButtonElement>('.clipbtn').forEach((b) => b.addEventListener('click', () => { lastOpener = b; push({ clip: +b.dataset.clip! + 1 }); }));
+      window.addEventListener('popstate', render);
+      render();
+    }
+  </script>
+</Base>

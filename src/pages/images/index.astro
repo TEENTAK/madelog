@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import ImageTile from '../../components/ImageTile.astro';
+import ViewerLayer from '../../components/ViewerLayer.astro';
+import { getImages, toColumns } from '../../lib/images';
+import { getWorks } from '../../lib/works';
+
+const PAGE = 12; // 한 번에 보여 주는 개수 (scripts/image-list.ts 와 같은 값)
+const images = await getImages(true); // 영상 리소스(from)까지 모두 싣고, 보이는 것은 아래에서 고른다
+const titles = Object.fromEntries((await getWorks()).map((w) => [w.id, w.data.title]));
+const solo = images.filter((i) => !i.data.from);
+const resources = images.filter((i) => i.data.from);
+const models = [...new Set(images.map((i) => i.data.model))];
+// 처음 열 때 보이는 것 = 낱장 화보 앞쪽 PAGE개. 나머지는 hidden 으로 싣고 스크립트가 묶음씩 연다
+const shownIds = new Set(solo.slice(0, PAGE).map((i) => i.id));
+const cols = toColumns([...solo, ...resources], 4);
+---
+<Base title="이미지" description="이미지 작품 목록" current="image">
+  <section class="hero hero-list">
+    <div class="w hero-in">
+      <div class="eyebrow">SELECTED STILLS · {images.length}</div>
+      <h1>Stills,<br />kept.</h1>
+      <p class="hero-sub">한 장으로 남긴 장면들. 마음에 드는 이미지는 크게 열어 볼 수 있습니다.</p>
+    </div>
+  </section>
+  <section class="w toolbar" aria-label="이미지 필터">
+    <div class="chips">
+      <button class="chip on" aria-pressed="true" data-model-chip="">모든 모델</button>
+      {models.map((m) => <button class="chip" aria-pressed="false" data-model-chip={m}>{m}</button>)}
+    </div>
+    {resources.length > 0 && <button class="pill sw" role="switch" aria-checked="false" data-res-switch><span class="knob"></span>영상 리소스 포함</button>}
+  </section>
+  <main class="w" style="padding-bottom:80px">
+    {images.length ? (
+      <>
+        <div class="masonry" data-masonry>{cols.map((col) => <div class="mc">{col.map((i) => <ImageTile item={i} sourceTitle={i.data.from ? titles[i.data.from] : undefined} order={images.indexOf(i)} hidden={!shownIds.has(i.id)} />)}</div>)}</div>
+        <div data-sentinel aria-hidden="true"></div>
+        <div class="more" data-more hidden></div>
+        <noscript><style>{'.tile[hidden]{display:block}'}</style></noscript>
+      </>
+    ) : (
+      <p class="empty"><b>아직 이미지가 없습니다</b>화보를 추가하면 여기에 나타납니다.</p>
+    )}
+  </main>
+  <ViewerLayer id="mv-1" />
+  <script>
+    import { Layer, type VItem } from '../../scripts/viewer';
+    import { initImageList } from '../../scripts/image-list';
+    const list0 = initImageList();
+    const root = document.getElementById('mv-1');
+    if (root) {
+      const L = new Layer(root);
+      // 이동 순서 = 지금 보이는(필터·정렬된) 타일 순서. 열로 나뉜 화면 순서가 아니라 목록 순서(data-order)
+      const tiles = () => [...document.querySelectorAll<HTMLElement>('[data-tile]')].filter((t) => !t.hidden && !t.closest('[hidden]'))
+        .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
+      let list: HTMLElement[] = [];
+      const idAt = (i: number) => list[i].dataset.id!;
+      const opts = {
+        counter: (a: number, n: number) => `${a} / ${n}`,
+        onNavigate: (i: number) => history.replaceState(history.state, '', `#${idAt(i)}`),
+        onClose: () => { if (history.state?.mv) history.back(); else { history.replaceState(null, '', location.pathname + location.search); render(); } },
+      };
+      function render() {
+        const id = decodeURIComponent(location.hash.slice(1));
+        if (!id) { L.close(); return; }
+        list0?.ensureVisible(id); // 주소로 바로 들어온 이미지가 아직 안 열린 묶음·필터 밖이면 먼저 연다
+        list = tiles();
+        const i = list.findIndex((t) => t.dataset.id === id);
+        if (i < 0) { L.close(); return; }
+        if (!L.isOpen) L.open(list.map((t) => JSON.parse(t.dataset.item!) as VItem), i, opts, list[i]);
+        else if (L.cur !== i) L.show(i);
+      }
+      document.addEventListener('click', (e) => {
+        const t = (e.target as HTMLElement).closest<HTMLElement>('[data-tile]');
+        if (!t || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        history.pushState({ mv: 1 }, '', `#${t.dataset.id}`); render();
+      });
+      window.addEventListener('popstate', render);
+      render();
+    }
+  </script>
+</Base>

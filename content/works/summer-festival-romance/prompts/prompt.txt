@@ -1,0 +1,81 @@
+1. Contact Sheet / Storyboard 이미지 생성 프롬프트
+6개 샷을 3×2 그리드로 구성한다. 각 패널은 독립적인 영화 프레임처럼 보이되, 인물·의상·시간대·공간의 연속성이 유지되어야 한다.
+CONTACT SHEET — BEFORE THE FIREWORKS FADE
+Create a cinematic live-action storyboard contact sheet for a 35-second vertical short film titled “Before the Fireworks Fade,” a subtle Japanese summer festival romance between two adult Japanese lovers in their mid-20s.
+IMAGE / BOARD SPECIFICATIONS
+A clean 3-column × 2-row grid containing exactly six distinct cinematic storyboard panels, read from left to right, top to bottom. Landscape-oriented overall board with six equally sized widescreen panels. Thin neutral gutters between panels. No decorative frame, no text, no captions, no panel numbers, no watermark. Each panel must depict a different story beat, not a variation of the same composition.
+VISUAL STYLE
+Cinematic realism, authentic live-action film stills, natural human anatomy, realistic skin and hair, physically accurate fabric folds, restrained romantic performances, natural depth of field, realistic night exposure, atmospheric practical lighting, sophisticated Japanese summer-night color grading. Deep indigo-blue evening shadows, warm amber paper lanterns, pale blue and navy yukata, golden and crimson fireworks. No anime, no illustration, no fantasy styling, no artificial beauty-filter appearance.
+CHARACTER CONTINUITY
+The same adult Japanese woman and the same adult Japanese man appear in all six panels.
+The woman wears a pale blue yukata with small white floral patterns, a dark navy obi, and neatly styled dark hair with a subtle hair ornament.
+The man wears a deep indigo-navy yukata with a restrained traditional obi and has short, naturally styled black hair.
+Keep their facial features, apparent ages, hairstyles, body proportions, clothing colors, accessories, and relative heights consistent across all panels. Their expressions and poses change naturally according to the story. They are an established young couple, comfortable with each other but still quietly shy in romantic moments.
+ENVIRONMENT CONTINUITY
+One coherent Japanese summer festival, moving from a lantern-lit festival street to a goldfish-scooping stall and then to a nearby riverside fireworks viewing area. Authentic yatai stalls, glowing paper lanterns, summer festival crowds, a shallow water basin with goldfish, fragile paper scoops, a dark river, and distant fireworks.
+The story progresses from blue-hour dusk to full night. The riverside is part of the same festival location, not a different city or unrelated setting.
+PANEL 1 — FESTIVAL ARRIVAL / ESTABLISHING SHOT
+Wide cinematic tracking composition on a traditional Japanese summer festival street at blue hour. The couple walks side by side through a softly crowded lantern-lit street. The woman glances toward a nearby stall while the man looks at her with a subtle affectionate expression. Warm lanterns contrast with the cool evening sky. Establish the festival atmosphere and their relationship without exaggerated romance.
+PANEL 2 — THE FAILED GOLDFISH SCOOP
+Medium close-up at a traditional goldfish-scooping stall. The woman concentrates on lifting a goldfish with a fragile paper scoop. The wet paper tears just as she is about to succeed, and the goldfish slips back into the shallow basin. She pauses with a disappointed, slightly embarrassed expression. The man beside her tries to suppress a laugh. The basin, water, fish, and torn paper scoop are clearly readable.
+PANEL 3 — BRIEFLY SEPARATED
+Medium shot in the same festival street, now darker and busier. Festival visitors pass between the couple, briefly obscuring them from each other. The man stops and turns back toward the woman; she looks for him through the moving crowd. Their gazes meet across a small gap. Natural crowd movement, clear spatial relationships, a subtle shift from playful energy to emotional anticipation.
+PANEL 4 — HANDS MEET
+Intimate cinematic insert shot of the man's hand reaching toward the woman. Her hand hesitates for a brief moment, then settles into his palm. Their yukata sleeves and fingers are rendered with realistic anatomy and natural fabric folds. Warm lantern bokeh in the background. The gesture is understated, emotionally sincere, and physically plausible. The image clearly communicates that their hands are now holding each other.
+PANEL 5 — FIREWORKS AND EYE CONTACT
+Romantic medium close-up two-shot at the riverside at night. The same couple stands side by side, still holding hands. A large golden firework blooms across the night sky, illuminating their faces with a brief warm reflection. The woman initially looks upward at the fireworks; the man quietly looks at her instead. She turns and catches his gaze. A larger golden firework begins to bloom behind them at that precise emotional moment. Their expressions remain natural, restrained, and intimate. This is the visual and emotional climax of the film.
+PANEL 6 — AFTER THE FIREWORKS
+Quiet wide rear view of the same couple standing at the riverside, hands still joined, the woman gently leaning her head against the man's shoulder. The fireworks have mostly faded. Faint golden reflections ripple across the dark river, with only a few distant sparks remaining in the sky. The festival lights are soft and distant. Leave generous negative space around the couple. The image should feel peaceful, intimate, and nostalgic rather than tragic.
+CINEMATOGRAPHY AND LIGHTING
+Use distinct framing for every panel: establishing wide shot, expressive medium close-up, crowd-framed medium shot, hand insert, emotional two-shot, and distant closing wide shot. Keep perspective and human scale realistic. Use practical lantern illumination, cool ambient night light, believable firework reflections, natural shadows, and consistent visual direction.
+STORY READABILITY
+The six panels must communicate this exact causal progression:
+Festival anticipation → goldfish scoop fails → the crowd separates the couple → the man reaches for her hand and she accepts → fireworks illuminate their exchanged gaze → they remain together after the fireworks fade.
+Prioritize readable action, visual storytelling, continuity, subtle romance, and emotional payoff over decorative beauty.
+EXCLUSIONS
+No extra panels, no duplicated shots, no additional protagonists, no costume changes, no sudden location changes, no inconsistent character faces, no malformed hands, no extra fingers, no floating props, no impossible contact, no exaggerated crying, no forced kiss, no text overlays, no subtitles, no logos, no watermarks.
+2. Google Flow용 Video Generation Prompt
+스토리 전체를 한 번의 생성에 무리하게 넣지 않고, 4개 클립으로 나눈다. 각 클립은 10초 이하를 목표로 하고, Contact Sheet는 샷 순서와 구도 기준으로 사용한다. 실제 생성 길이와 입력 옵션은 현재 Flow UI에서 선택 가능한 범위에 맞춘다.
+CLIP 1 — A Summer Evening
+약 8–10초
+Contact Sheet: Panel 1 → Panel 2
+Use the attached contact sheet as the visual reference for the shot order and composition. Animate Panel 1 followed by Panel 2 as two distinct cinematic shots.
+A young Japanese couple in their mid-20s, wearing the same pale blue floral yukata and deep indigo-navy yukata shown in the reference, walk together through a traditional Japanese summer festival at blue hour.
+SHOT 1: The camera gently tracks behind and slightly beside the couple as they walk through a lantern-lit festival street. Festival visitors move naturally in the background. The woman notices a goldfish-scooping stall and turns her attention toward it. The man notices her interest and follows her gaze. Cut naturally to the stall.
+SHOT 2: The woman carefully attempts to scoop a goldfish from a shallow water basin using a fragile paper scoop. She slowly lifts it, but the wet paper tears and the fish slips back into the water. She freezes for a brief beat with a disappointed expression. The man tries to hold back a laugh, then smiles. She looks at him, and they share a small, spontaneous laugh.
+Use restrained human performances, natural hand movements, realistic water and paper behavior, warm practical lantern light, and subtle camera motion. Preserve the couple's facial appearance, hairstyles, clothing, and body proportions. The goldfish remain in the basin.
+End with the couple still standing beside the same goldfish stall, their shared laughter settling into a comfortable smile. This ending state must provide a coherent transition into the next clip.
+Cinematic realism, natural ambient festival sound, soft crowd chatter, footsteps, subtle water sounds, and the small sound of the paper scoop tearing. Gentle instrumental music may sit quietly underneath. No dialogue, no subtitles, no text overlays, no costume changes, no exaggerated comedy.
+CLIP 2 — Hold My Hand
+약 8–10초
+Contact Sheet: Panel 3 → Panel 4
+Use the attached contact sheet as the visual reference for the shot order and composition. Animate Panel 3 followed by Panel 4 as two distinct cinematic shots.
+Continue with the same Japanese couple, the same yukata, and the same summer festival. It is now darker, with warm paper lanterns against a deep blue night sky. They are moving toward the riverside fireworks viewing area.
+SHOT 1: The couple walks together through a crowded festival street. Visitors naturally pass between them. The crowd briefly obscures their view of each other and creates a small gap. The man takes one step forward, notices that the woman is no longer beside him, and stops. He turns back. She looks through the crowd and finds his eyes. Their expressions shift from momentary uncertainty to quiet recognition. Do not make either character panic.
+SHOT 2: The man gently extends one hand toward her. After a short, natural hesitation, the woman places her hand in his. He closes his fingers around hers with a soft, reassuring gesture. Show the physical contact clearly and naturally. Cut from a close-up of their hands to her face as she looks up at him with a restrained smile. He returns the smile.
+Keep the crowd moving naturally behind them while the couple's gesture remains the emotional focus. Use a subtle camera push-in and warm lantern bokeh. No dramatic slow motion, no sudden embrace, no kiss, and no exaggerated facial expressions.
+End with the couple standing close together, hands firmly but gently joined, facing in the direction of the riverside. Their hands remain joined for the following clip.
+Cinematic realism, realistic anatomy and fabric, natural festival ambience, distant crowd chatter and footsteps. Music becomes slightly warmer and more intimate. No dialogue, no subtitles, no text overlays, no changes to clothing or appearance.
+CLIP 3 — The Fireworks
+약 8–10초
+Contact Sheet: Panel 5
+Use Panel 5 of the attached contact sheet as the composition and emotional reference. Create one continuous cinematic shot without scene cuts.
+The same Japanese couple stands side by side at the riverside fireworks viewing area at night, still holding hands. Their facial appearance, hairstyles, yukata, and relative heights remain consistent. The dark river lies behind them, with distant festival lights along the opposite bank.
+Begin with a medium two-shot from a slight side angle. A golden firework rises and bursts overhead, producing a believable warm flash across their faces and clothing. The woman looks upward, absorbed by the display. The man quietly turns his eyes toward her face instead of looking at the sky. Hold this difference in gaze long enough for the audience to notice. The woman senses his attention and turns toward him. Their eyes meet, and she gives him a small, genuine smile. At that moment, a larger golden firework blossoms in the sky behind them, creating the emotional visual payoff.
+The camera makes a slow, controlled push-in, keeping both faces readable and the fireworks visible in the background. Their expressions remain subtle and natural. Their hands stay joined throughout the shot. Firework light should change naturally with each burst, with realistic highlights and shadows rather than constant artificial illumination.
+End on their shared gaze as the golden fireworks expand overhead. Do not introduce a kiss or a new action. Preserve the intimate pause.
+Cinematic realism, realistic night exposure, physically plausible fireworks and reflections, distant firework reports, a gradual musical swell synchronized with the largest burst. No dialogue, no subtitles, no text overlays, no sudden camera movement, no identity or costume drift.
+CLIP 4 — After the Last Spark
+약 5–7초
+Contact Sheet: Panel 6
+Use Panel 6 of the attached contact sheet as the ending composition reference. Create one continuous, quiet cinematic shot.
+The same Japanese couple remains at the same riverside location immediately after the fireworks display. They are still holding hands and wearing the same yukata. Seen from behind in a wide composition, they stand close together facing the dark river. The woman gently leans her head against the man's shoulder. He remains still and comfortable beside her.
+The last bright fireworks fade into a few distant sparks. Soft golden reflections ripple across the river and gradually diminish. The festival lanterns remain visible in the distance, providing continuity with the preceding scene.
+The camera slowly pulls back, revealing more of the quiet riverbank and the surrounding summer night. Keep the movement smooth and understated. Allow the final composition to settle without adding another major action.
+End with the couple still together, their joined hands visible, their silhouettes framed by the dark river and fading golden reflections. The emotional tone is warm, peaceful, and nostalgic.
+Cinematic realism, natural body contact, realistic fabric, subtle night ambience, distant crowd noise, and the fading reverberation of the final firework. Let the music soften and leave a brief natural ambience at the end. No dialogue, no subtitles, no text overlays, no new fireworks, no costume changes, no sudden scene change.
+3. 생성 및 편집 시 적용할 기준
+Reference 배치: Contact Sheet를 샷 순서·구도 기준으로 사용한다. 별도 캐릭터 레퍼런스가 있다면 인물 외모와 의상 기준으로 구분한다. 실제 첨부 순서에 맞춰 Image1, Image2처럼 참조를 지정하고, 제공하지 않은 레퍼런스를 프롬프트에서 언급하지 않는다.
+클립 연결 기준
+연결편집 방식확인할 상태Clip 1 → 2웃음이 잦아드는 순간 컷동일한 인물·유카타, 축제의 야간 분위기Clip 2 → 3강변으로 전환하는 의미 있는 컷잡은 손과 두 사람의 관계 유지Clip 3 → 4불꽃의 밝기와 음악을 낮추며 컷같은 강변, 불꽃의 잔광, 손을 잡은 상태최종 검증 우선순위: 인물의 외모·의상 일관성 → 손을 잡는 행동의 물리적 정확성 → 축제 거리에서 강변으로의 공간 연속성 → 불꽃의 시각적 페이오프 → 음악과 효과음의 감정적 타이밍.
+개별 프레임을 전부 별도로 생성할 필요는 없다. Contact Sheet를 이용한 영상 생성에서 특정 샷의 구도나 손의 접촉이 반복적으로 무너지면, 해당 샷의 시작 프레임만 별도로 제작·검증하는 경로로 전환한다.

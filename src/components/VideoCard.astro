@@ -1,0 +1,48 @@
+---
+import { type Work, tagClass, fmtDate, fmtDur, cardDuration, thumbUrl, previewUrl, ratioOf } from '../lib/works';
+
+interface Props {
+  work: Work;
+  variant?: 'grid' | 'row'; // grid: 16:9 상자(전체 탭), row: 줄맞춤(영상 리스트)
+  reveal?: boolean;
+  eager?: boolean; // 첫 화면 이미지는 즉시 로드
+}
+const { work, variant = 'grid', reveal = true, eager = false } = Astro.props;
+const loading = eager ? 'eager' : 'lazy';
+const decoding = eager ? 'sync' : 'async';
+const d = work.data;
+const r = ratioOf(work);
+const isWide = r > 16 / 9 + 0.02;
+const isNarrow = r < 16 / 9 - 0.02;
+const letterbox = variant === 'grid' && (isWide || isNarrow);
+const style = variant === 'row' ? `--ar:${r.toFixed(4)}` : undefined;
+---
+<a
+  class:list={['card', 'card--md', variant === 'row' && (isNarrow ? 'tall' : 'wide'), reveal && 'rv']}
+  href={`/p/${work.id}`}
+  style={style}
+  data-card
+  data-title={d.title}
+  data-tags={[...d.tags, ...d.model].join('|')}
+  data-date={d.date.toISOString()}
+  data-preview={previewUrl(work)}
+>
+  {variant === 'grid' ? (
+    <div class:list={['media', letterbox && 'lb']} style="--ar:16/9">
+      <img class="im" src={thumbUrl(work)} alt="" loading={loading} decoding={decoding} />
+      {letterbox && <img class:list={['lb-fg', isWide && 'lb-fg--wide']} style={`--fa:${r.toFixed(4)}`} src={thumbUrl(work)} alt="" loading={loading} decoding={decoding} />}
+      <span class="dur">{fmtDur(cardDuration(work))}</span>
+    </div>
+  ) : (
+    <div class="media">
+      <img class="im" src={thumbUrl(work)} alt="" loading={loading} decoding={decoding} />
+      <span class="dur">{fmtDur(cardDuration(work))}</span>
+    </div>
+  )}
+  <h2>{d.title}</h2>
+  <time class="mono date" datetime={d.date.toISOString().slice(0, 10)}>{fmtDate(d.date)}</time>
+  <div class="dt">
+    {d.tags.map((t) => <span class={`tag ${tagClass(t)}`}>{t}</span>)}
+    {d.model.map((m) => <span class="tag tag--model">{m}</span>)}
+  </div>
+</a>

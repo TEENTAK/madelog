@@ -1,0 +1,122 @@
+# VIDEO GENERATION PROMPT — AERI'S JEALOUSY
+
+**Duration:** 10 seconds  
+**Aspect Ratio:** 9:16 vertical  
+**Genre:** American sitcom parody  
+**Visual Style:** Photorealistic live-action, 1980s multi-camera studio sitcom
+
+## REFERENCE FILES — REQUIRED
+
+Use the four attached reference files for their specific purposes. Do not treat them as interchangeable.
+
+- **`Storyboard.png` — Shot sequence and composition reference:** Follow the six storyboard panels in order. Preserve the intended shot progression, speaker-focused framing, eyelines, character positions, and final reaction shot. Do not add subtitles, captions, labels, timecodes, or text overlays.
+- **`AERI.png` — Main dog character identity reference:** Match Aeri's exact face, coat colors and patterns, fur volume, eye shape, muzzle, ears, body proportions, and overall appearance. Aeri is a very small, approximately 2 kg sable Pomeranian. Keep her visibly much smaller than the adult humans in every shot.
+- **`MAN.png` — Male character identity reference:** Match the man's facial features, wavy brown hair, age appearance, build, blue denim shirt, white T-shirt, blue jeans, and light-colored sneakers. Maintain the same appearance and wardrobe throughout the video.
+- **`WOMAN.png` — Female character identity reference:** Match the woman's facial features, auburn-brown wavy hair, pink cardigan, cream top, blue jeans, gold hoop earrings, and necklace. Maintain her appearance and wardrobe when she enters the scene.
+
+**Reference priority:** Use `AERI.png`, `MAN.png`, and `WOMAN.png` as the authoritative character identity references. Use `Storyboard.png` for scene composition, shot order, and action progression. If a storyboard depiction conflicts with a character reference, preserve the character reference's identity.
+
+## SCENE & SETTING
+
+A cozy, lived-in American living room featuring a burgundy velvet sofa, patterned wallpaper, warm wood paneling, decorative lamps, and colorful cushions. Preserve consistent set layout, lighting, and spatial relationships across all shots.
+
+The man is seated on the sofa with Aeri beside him. The woman appears in the doorway near the end of the scene.
+
+## SHOT-BY-SHOT SEQUENCE
+
+**SHOT 1 — 0.0–2.0 seconds | Aeri's accusation**
+
+Medium two-shot from a fixed, eye-level camera. Aeri sits beside the man on the sofa and looks directly up at him with a suspicious, serious expression.
+
+**Aeri:** "You've been petting another dog."
+
+Keep Aeri's entire small body and the man's upper body spatially readable. Do not enlarge Aeri to fill the frame unnaturally.
+
+**SHOT 2 — 2.0–3.5 seconds | The denial**
+
+Cut to a medium shot favoring the man, with Aeri's small head or body visible in the foreground when composition permits. He looks surprised and raises his hands defensively.
+
+**Man:** "What? No."
+
+His expression is nervous but restrained, consistent with natural sitcom acting.
+
+**SHOT 3 — 3.5–4.5 seconds | The evidence**
+
+Cut to a speaker-focused shot of Aeri at a realistic small-dog scale. She maintains eye contact with the man, ears alert, with an unwavering and suspicious expression.
+
+**Aeri:** "I can smell her."
+
+Preserve her exact character identity. Do not alter her muzzle, eye spacing, coat pattern, or body proportions to exaggerate the expression.
+
+**SHOT 4 — 4.5–6.3 seconds | The confession**
+
+Cut back to the man in a medium shot. He glances away and makes a small explanatory gesture, appearing guilty.
+
+**Man:** "Okay, it was just one belly rub."
+
+Aeri remains nearby, watching him.
+
+**SHOT 5 — 6.3–8.2 seconds | The revelation**
+
+Cut to a fixed three-quarter shot showing the man, Aeri, and the doorway. The woman appears in the doorway and looks at the man with disbelief.
+
+**Woman:** "Bella? The Samoyed next door? Again?"
+
+The man turns toward the woman. Aeri briefly redirects her gaze toward the speaker, reacting to the revelation.
+
+**SHOT 6 — 8.2–10.0 seconds | The punchline**
+
+Cut to a medium close-up of Aeri, with the man partially visible at the edge of the frame. Aeri shifts her gaze back toward him, her expression changing from suspicion to stunned disbelief.
+
+**Aeri:** "Again???"
+
+Hold the final reaction briefly. End on Aeri's intense stare and the man's guilty silence.
+
+## CHARACTER IDENTITY & CONTINUITY LOCK
+
+- Aeri must remain the same tiny 2 kg sable Pomeranian defined by `AERI.png`.
+- The man must remain the same person defined by `MAN.png`.
+- The woman must remain the same person defined by `WOMAN.png`.
+- Never exchange character identities or transfer one character's features to another.
+- Do not change fur color, facial structure, hairstyle, clothing, body proportions, or accessories between shots.
+- Expressions, gaze direction, and natural poses may change according to the performance.
+- Aeri remains a real dog with canine anatomy. Her human-like personality is conveyed through timing, gaze, and expression, not human facial features or a human body.
+- Maintain believable relative scale: Aeri is dramatically smaller than both adults and must not appear human-sized or oversized on the sofa.
+- Keep character positions and eyelines consistent across direct cuts.
+
+## CAMERA, EDITING & PERFORMANCE
+
+Use fixed, eye-level cameras with a natural 35–50 mm lens perspective. Follow classic multi-camera sitcom grammar with medium two-shots, speaker-focused medium shots, and reaction shots.
+
+Change the composition according to the active speaker and the emotional information revealed by each line. The shot should favor the speaking character while preserving enough spatial context to understand the interaction.
+
+Use direct cuts only. No camera movement, zooms, handheld footage, or extreme close-ups. Maintain deep focus so the characters and surrounding set remain clearly visible.
+
+Dialogue must follow the specified order and be synchronized to the correct speaker. Use concise, conversational delivery and brief comedic pauses. The humor comes from the contrast between Aeri's tiny size and serious attitude, the man's defensive denial, and the woman's final revelation.
+
+No subtitles, captions, timecodes, labels, speech bubbles, or text overlays. No background music. Use subtle room tone and restrained sitcom audience laughter only after the final punchline.
+
+## VISUAL MOOD — VERBATIM
+
+Photorealistic live-action in the style of a 1980s American multi-camera studio sitcom, with the warm, natural, lived-in character rendering associated with Friends. Do not reproduce the original cast's likenesses or 1990s wardrobe.
+
+LIGHTING
+Bright, high-key, low-contrast studio lighting with a broad, warm-white diffused frontal key and generous fill from both sides. Evenly illuminated faces, soft shadows, and minimal brightness separation between subjects and background. Preserve shadow detail, slightly lifted blacks, controlled highlights, and naturally warm skin tones without yellow or orange casts.
+
+COLOR & SET DESIGN
+A palette of peach, warm yellow, wood brown, and denim blue, with moderately rich, natural saturation. Tangible studio-built interiors featuring patterned wallpaper, wood paneling, velvet upholstery, and period-appropriate lamps. Preserve realistic material textures without artificial aging or faded retro filters.
+
+IMAGE TEXTURE
+Subtle, fine, evenly distributed 35mm film grain. Natural skin texture, individual hair strands, and visible fabric weave. Clean, defined details without excessive sharpening, beauty smoothing, soft-focus haze, or artificial glow.
+
+CHARACTERS
+Role-appropriate 1980s everyday clothing and hairstyles. Maintain consistent facial features, hairstyles, wardrobe, accessories, and signature colors across reference images and generated shots.
+
+CAMERA & FRAMING
+Locked-off, eye-level cameras with natural 35–50mm lens perspective. Frontal or 45-degree three-quarter views, framed exclusively as waist-up medium shots or chest-up medium close-ups. Deep focus keeps characters and surrounding sets clearly visible.
+
+EDITING & PERFORMANCE
+Direct cuts between fixed camera positions only. Natural, conversational performances with believable eyelines and realistic interpersonal interactions. Characters engage with each other rather than constantly looking at the camera.
+
+AVOID
+Dark cinematic lighting, harsh shadows, neon lighting, shallow depth of field, background bokeh, teal-and-orange grading, fluorescent colors, plastic skin, oily highlights, heavy film grain, VHS artifacts, film scratches, flicker, cartoon styling, obvious CGI, handheld footage, camera movement, zooms, extreme close-ups, and empty establishing shots.

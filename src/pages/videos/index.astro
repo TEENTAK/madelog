@@ -1,0 +1,42 @@
+---
+import Base from '../../layouts/Base.astro';
+import VideoCard from '../../components/VideoCard.astro';
+import { getWorks, tagClass } from '../../lib/works';
+
+const works = await getWorks();
+// 필터 칩: 작품에 실제로 쓰인 태그만 (태그 사전의 색은 카드에서 적용)
+const tags = [...new Set(works.flatMap((w) => w.data.tags))];
+---
+<Base title="영상" description="영상 작품 목록" current="video">
+  <section class="hero hero-list">
+    <div class="w hero-in">
+      <div class="eyebrow">SELECTED FILMS · {works.length}</div>
+      <h1>Words,<br />in motion.</h1>
+      <p class="hero-sub">장면 하나하나를 어떻게 만들었는지, 레퍼런스와 클립을 작품마다 남겨 둡니다.</p>
+    </div>
+  </section>
+
+  <div data-list>
+    <section class="w toolbar" aria-label="영상 필터">
+      <div class="chips">
+        <button class="chip on" data-chip="" aria-pressed="true">전체 {works.length}</button>
+        {tags.map((t) => <button class="chip" data-chip={t} aria-pressed="false">{t}</button>)}
+      </div>
+      <div class="tools">
+        <input class="search" data-search type="search" aria-label="검색" placeholder="제목, 태그 검색" />
+        <button class="chip" data-sort>최신순 ↓</button>
+      </div>
+    </section>
+    <main class="w" style="padding-bottom:80px">
+      <section class="gal" data-grid aria-label="영상 작품 목록">
+        {works.map((w, i) => <VideoCard work={w} variant="row" eager={i < 8} />)}
+      </section>
+      <p class="empty" data-empty hidden><b>찾는 작품이 없습니다</b>다른 검색어나 태그를 시도해 보세요.</p>
+      <div class="more" data-more hidden><button class="chip">더 보기 <small></small></button></div>
+      <div class="more" data-end hidden><div class="end">마지막 작품입니다</div></div>
+    </main>
+  </div>
+  <script>
+    import '../../scripts/list';
+  </script>
+</Base>

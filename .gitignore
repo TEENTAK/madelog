@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+# 미디어·원본은 Git에 넣지 않는다 (R2 업로드 대상)
+media-local/
+public/media
+originals/
+.env

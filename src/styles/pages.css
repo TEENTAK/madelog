@@ -1,0 +1,153 @@
+/* 페이지 전용 규칙. 공통 컴포넌트는 design-system.css(v0.7)에 있고, 여기에는 배치만 둔다. */
+.page{min-height:100svh;display:flex;flex-direction:column}
+.page>main{flex:1}
+img.im,img.lb-fg{display:block;object-fit:cover;width:100%}
+img.im{height:100%}
+img.lb-fg{width:auto}
+.vwin img.im{height:100%}
+
+/* 섹션 제목 */
+.sec-h{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
+.sec-h h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.sec-h a{align-self:center;min-height:var(--tap);display:inline-flex;align-items:center}
+.sec-h .mail{margin-left:auto}
+
+/* 전체 탭 히어로(스크롤 모션 전의 일반 레이아웃) */
+.hero-home .hero-in{display:grid;grid-template-columns:minmax(0,1fr) 720px;gap:56px;align-items:center}
+.hero-home .hero-tx h1{font-size:96px;line-height:1;margin:16px 0 0}
+@media(max-width:1100px){.hero-home .hero-in{grid-template-columns:1fr}.hero-home .hero-tx h1{font-size:72px}}
+
+/* 목록 페이지 히어로(영상·이미지) */
+.hero-list .hero-in{background:linear-gradient(90deg,#fff 44%,rgba(255,255,255,.82) 72%,rgba(255,255,255,.15))}
+
+/* 마퀴 */
+.mq{overflow:hidden;border-bottom:1px solid var(--line);padding:22px 0;display:flex;flex-direction:column;gap:6px;background:var(--white)}
+.mq-t{display:flex;width:max-content;font:700 64px/1.1 var(--font-display);letter-spacing:-.03em;white-space:nowrap;animation:mql 36s linear infinite}
+.mq-t.r{animation-name:mqr;animation-duration:44s}
+.mq-t span{padding-right:.5em}
+.mq-t .s{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+@keyframes mql{to{transform:translateX(-50%)}}
+@keyframes mqr{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@media(max-width:600px){.mq-t{font-size:44px}}
+@media(prefers-reduced-motion:reduce){.mq-t{animation:none}}
+
+/* 목록 도구줄(필터·검색·정렬) */
+.toolbar{padding-top:26px;padding-bottom:34px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.tools{display:flex;gap:8px}
+.search{height:44px;width:215px;border:0;border-radius:999px;background:var(--sf);padding:0 15px;font-size:13px}
+.empty{padding:96px 0;text-align:center;color:var(--muted);font-size:15px;line-height:1.8}
+.empty b{display:block;color:var(--ink);font:700 22px var(--font-display);margin-bottom:8px}
+[hidden]{display:none!important}
+.card .im video,.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* 작품 상세 */
+.sec{padding-top:80px}
+.h2{margin:0 0 24px;font-size:26px;font-weight:800;letter-spacing:-.03em}
+.back{color:var(--ink2)}
+.d-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-top:20px}
+.d-head .ttl{margin:16px 0 0;font-size:48px;line-height:1.1;font-weight:800;letter-spacing:-.04em}
+.d-head .sum{margin:14px 0 0;font-size:17px;line-height:1.7;color:var(--ink2);max-width:760px}
+.player{--pw:1000px;position:relative;width:min(100%,var(--pw),calc(76svh*var(--ar)));aspect-ratio:var(--ar);margin:36px auto 0;border-radius:24px;overflow:hidden;background:#0b0b0b}
+.player video{display:block;width:100%;height:100%;background:#0b0b0b}
+.player__label{position:absolute;left:16px;top:16px;background:rgba(0,0,0,.6);color:#fff;font-size:13px;padding:5px 12px;border-radius:999px;pointer-events:none}
+.switch{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.dstats{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:40px}
+.dstats div{flex:1;padding:20px 0 20px 24px;border-left:1px solid var(--line)}
+.dstats div:first-child{border-left:0;padding-left:0}
+.dstats b{display:block;font-size:24px;font-weight:800;letter-spacing:-.03em}
+.dstats span{font-size:13px;color:var(--ink2)}
+.making{display:grid;grid-template-columns:240px 1fr;gap:40px}
+.prose{max-width:680px;font-size:16px;line-height:1.85;color:#2a2a2a}
+.prose p{margin:0 0 18px}
+.sq{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#e8e8e8}
+.sq img{width:100%;height:100%;object-fit:cover;display:block}
+.g4c{display:grid;grid-template-columns:repeat(4,1fr);gap:36px 24px}
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:20px 16px}
+.refname{margin-top:8px;font-size:14px;font-weight:600}
+.pager{display:flex;justify-content:space-between;margin-top:48px}
+.prompts{display:grid;gap:12px}
+@media(max-width:1000px){.g6{grid-template-columns:repeat(3,1fr)}.g4c{grid-template-columns:repeat(2,1fr)}.making{grid-template-columns:1fr;gap:8px}}
+@media(max-width:700px){.dstats{flex-wrap:wrap}.dstats div{flex:1 1 45%;border-left:0;padding-left:0}.d-head .ttl{font-size:30px}}
+
+/* 뷰어 모달 (레퍼런스·클립·이미지 공용) */
+.refbtn,.clipbtn{display:block;width:100%;padding:0;border:0;background:none;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.refbtn:focus-visible,.clipbtn:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:14px}
+.mv-dim{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:40px;background:rgba(0,0,0,.6)}
+#mv-2{z-index:110;background:rgba(0,0,0,.45)}
+.mv-dim[hidden]{display:none}
+.mv-modal{width:min(1100px,100%);height:min(680px,100%);outline:none;grid-template-columns:minmax(0,1fr) 360px}
+.mv-modal .viewer{min-width:0;min-height:0;flex-direction:column;justify-content:flex-start;gap:14px;padding:20px 0 16px}
+.mv-stage{flex:1 1 0;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;padding:0 20px;box-sizing:border-box}
+.mv-stage img,.mv-stage video{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:6px}
+.mv-stage [hidden]{display:none}
+.mv-modal .arr[hidden],.mv-modal [hidden]{display:none}
+.mv-modal .viewer-strip,.mv-modal .viewer-count{position:static;flex:none;width:100%}
+.mv-modal .viewer-count{margin-top:2px}
+.mv-modal .viewer-strip{flex-wrap:nowrap;overflow-x:auto;justify-content:safe center;padding:0 16px;box-sizing:border-box;scrollbar-width:none}
+.mv-modal .strip-btn{flex:none;width:72px;height:44px;padding:0;overflow:hidden;opacity:.7}
+.mv-modal .strip-btn[aria-current="true"]{opacity:1}
+.mv-modal .strip-btn img{width:100%;height:100%;object-fit:cover;display:block}
+.mv-modal .rimg{overflow:hidden}
+.mv-modal .rimg img{width:100%;height:100%;object-fit:cover;display:block}
+.mv-modal .refs .ref{cursor:pointer}
+.mv-modal .prompt{white-space:pre-wrap}
+.pf--clamp .prompt{max-height:calc(4 * 22px + 24px);overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
+@media(max-width:760px){
+  .mv-dim{padding:0;align-items:flex-end}
+  .mv-modal{grid-template-columns:minmax(0,1fr);grid-template-rows:42vh minmax(0,1fr);height:92vh;border-radius:var(--r-modal) var(--r-modal) 0 0}
+  .mv-modal .viewer{padding:16px 0 12px;gap:12px}
+  .mv-stage{padding:0 16px}
+  .mv-modal .arr{top:calc(16px + (42vh - 140px) / 2);width:44px;height:44px;margin-top:-22px}
+  .mv-modal .panel{padding:20px 16px 32px}
+  .mv-modal .panel h2{font-size:20px;padding-right:56px}
+  .mv-modal .close{right:12px;top:12px;width:44px;height:44px;font-size:16px}
+}
+
+/* ── 전체 탭 히어로 스크롤 모션 (HERO-MOTION-SPEC.md · 안 E) ──
+   기본(JS 없음 · 모션 꺼짐 · 1240px 미만): 일반 히어로. JS가 .is-motion-enabled를 붙일 때만 겹침 배치로 바뀐다. */
+.hero-home .hw{display:block}
+.hero-home .featured-info,.hero-home .hero-cue{display:none}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.hero-video.on{opacity:1}
+.vwin:hover .hero-video{transform:scale(var(--zoom))}
+
+.motion-track.is-motion-enabled{--col-w:432px;--hx:calc((100% - min(100%,var(--page)))/2 + var(--gutter));--vt:max(24px,calc(50% - 250px))}
+.motion-track.is-motion-enabled .motion-stage>.hero-in,
+.motion-track.is-motion-enabled .hero-in .hero-tx,
+.motion-track.is-motion-enabled .hero-in .hero-feat{display:contents}
+.motion-track.is-motion-enabled .motion-stage>.hero-in{position:static;background:none;padding:0}
+.motion-track.is-motion-enabled .hl{position:absolute;margin:0;will-change:transform,opacity}
+.motion-track.is-motion-enabled .eyebrow.hl{left:var(--hx);top:calc(var(--vt) - 36px)}
+.motion-track.is-motion-enabled .hero-home h1{left:var(--hx);top:calc(var(--vt) + 2px);width:var(--col-w);height:3em;font-size:clamp(72px,7.5vw,112px);line-height:1;will-change:auto}
+.motion-track.is-motion-enabled .hero-home .hw{position:absolute;left:0;top:0;white-space:nowrap;transform-origin:0 50%;will-change:transform,opacity}
+.motion-track.is-motion-enabled .hero-home .hw:nth-child(2){top:1em}
+.motion-track.is-motion-enabled .hero-home .hw:nth-child(3){top:2em}
+.motion-track.is-motion-enabled .hero-sub.hl{left:var(--hx);top:calc(var(--vt) + 326px);width:340px}
+.motion-track.is-motion-enabled .vwin.hl{left:calc(var(--hx) + var(--col-w));top:var(--vt)}
+.motion-track.is-motion-enabled .stats.hl{left:calc(var(--hx) + var(--col-w));top:calc(var(--vt) + 437px);width:720px}
+.motion-track.is-motion-enabled .featured-info{display:block;left:calc(var(--hx) + 776px);top:calc(var(--vt) + 30px);width:min(376px,calc(100% - var(--hx) - 776px - var(--gutter)));opacity:0}
+.motion-track.is-motion-enabled .featured-info h2{margin:14px 0 0;word-break:keep-all;text-wrap:balance;font-size:clamp(40px,4.4vw,56px);line-height:1.05;letter-spacing:-.03em}
+.motion-track.is-motion-enabled .featured-info .dt{margin-top:20px}
+.motion-track.is-motion-enabled .featured-info .hero-sub{margin-top:16px}
+.motion-track.is-motion-enabled .featured-info .pill{margin-top:24px}
+.motion-track.is-motion-enabled .hero-cue{display:grid;left:var(--hx);bottom:20px;width:40px;height:40px;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--white);font-size:18px}
+
+/* 진입 연출: 헤더 → 헤드라인 세 줄 → 영상 → 카운터. translate 속성만 써서 JS의 transform과 겹치지 않는다 */
+@keyframes hm-in{from{opacity:0;translate:0 24px}to{opacity:1;translate:0 0}}
+.hm-intro{--hm-d:100ms;--hm-t:.7s}
+.hm-intro.hm-fast{--hm-d:40ms;--hm-t:.46s}
+.hm-intro .site-header .brand,.hm-intro .site-header nav,
+.hm-intro .hero-home .hw,.hm-intro .hero-home .vwin,.hm-intro .hero-home .stats{animation:hm-in var(--hm-t) cubic-bezier(.2,.7,.2,1) backwards}
+.hm-intro .site-header nav{animation-delay:calc(var(--hm-d)*0)}
+.hm-intro .hero-home .hw:nth-child(1){animation-delay:var(--hm-d)}
+.hm-intro .hero-home .hw:nth-child(2){animation-delay:calc(var(--hm-d)*2)}
+.hm-intro .hero-home .hw:nth-child(3){animation-delay:calc(var(--hm-d)*3)}
+.hm-intro .hero-home .vwin{animation-delay:calc(var(--hm-d)*4)}
+.hm-intro .hero-home .stats{animation-delay:calc(var(--hm-d)*5)}
+@media(prefers-reduced-motion:reduce){.hm-intro *{animation:none!important}}
+
+/* 이미지 목록: 묶음 열기 */
+.tile[hidden]{display:none}
+.tile.sk .im{color:transparent}
+.tile.sk .ov{opacity:0}
