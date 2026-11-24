@@ -7,3 +7,5 @@ media-local/
 public/media
 originals/
 .env
+_to_delete/
+_stage*.zip

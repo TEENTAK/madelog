@@ -14,6 +14,7 @@ export function bindPreview(scope: ParentNode = document) {
       if (!media || video) return;
       video = document.createElement('video');
       video.src = card.dataset.preview!;
+      video.disablePictureInPicture = true; video.disableRemotePlayback = true;
       video.muted = true; video.loop = true; video.playsInline = true; video.autoplay = true;
       video.setAttribute('aria-hidden', 'true');
       video.addEventListener('error', stop);

@@ -23,18 +23,7 @@ const cols = toColumns(stills, 4);
 const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
 ---
 <Base current="all" image={featured ? posterUrl(featured) : undefined}>
-  <script is:inline slot="head">
-    // 진입 연출 여부를 첫 페인트 전에 정한다(해시가 있거나 이미 스크롤됐으면 생략, 재방문이면 짧게)
-    (function () {
-      try {
-        if (location.hash || window.scrollY > 4 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        var r = document.documentElement.classList;
-        r.add('hm-intro');
-        if (sessionStorage.getItem('hm-seen')) r.add('hm-fast');
-        sessionStorage.setItem('hm-seen', '1');
-      } catch (e) {}
-    })();
-  </script>
+  <script is:inline slot="head" src="/hm-intro.js"></script>
   <div class="motion-track" data-motion>
     <section class="hero hero-home motion-stage">
       <div class="hero-ghost" aria-hidden="true">MADE.LOG</div>
@@ -49,7 +38,7 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
             <a class:list={['vwin', 'hl', letterbox && 'lb']} data-l="vwin" href={`/p/${featured.id}`} style={`--fa:${fr.toFixed(4)}`} aria-label={`대표작 ${featured.data.title} 보기`}>
               <img class="im" src={posterUrl(featured)} alt="" />
               {letterbox && <img class:list={['lb-fg', fr > 16 / 9 && 'lb-fg--wide']} src={posterUrl(featured)} alt="" />}
-              {heroVideo && <video class="hero-video" data-src={heroVideo} poster={posterUrl(featured)} muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>}
+              {heroVideo && <video class="hero-video" data-src={heroVideo} poster={posterUrl(featured)} muted loop playsinline disablepictureinpicture disableremoteplayback preload="none" aria-hidden="true" tabindex="-1"></video>}
               <div class="vwin__scrim" aria-hidden="true"></div>
               <div class="vwin__tags">
                 <span class="tag tag--new">{featured.data.featured ? 'FEATURED' : 'LATEST'}</span>

@@ -5,4 +5,6 @@ export default defineConfig({
   site: 'https://madelog.teentak.workers.dev',
   output: 'static',
   trailingSlash: 'ignore',
+  // 작은 스크립트를 HTML에 인라인하지 않는다(CSP script-src 'self' 유지)
+  vite: { build: { assetsInlineLimit: 0 } },
 });

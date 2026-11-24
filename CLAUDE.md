@@ -58,3 +58,8 @@ scripts/sync-notion.mjs           Notion 동기화
 - 사용자는 한국어로 대화하고, 기술 용어는 영어를 병기하는 것을 선호한다. 풀이 과정은 짧게, 불확실하면 추측하지 말고 질문한다.
 - 원본 폴더의 파일을 지우지 않는다. `content/`의 `index.md`를 사용자가 직접 고쳤을 수 있으니 덮어쓰지 않는다.
 - 디자인 시스템 CSS를 고치면 캔버스(https://claude.ai/artifact/CxnTjqXNmwsRDjzBHkaEu9)의 연결 주소도 다시 맞춰야 하니, 고치기 전에 먼저 알린다.
+
+## 보안·보호 (2026-11-24)
+- `public/_headers`: 보안 헤더 + CSP(`script-src 'self'`). 외부 주소(폰트 CDN, R2 주소)를 새로 쓰면 CSP도 같이 고친다. **R2 사용자 지정 도메인으로 바꾸면 `img-src`·`media-src`의 `https://*.r2.dev`를 새 도메인으로 교체.** 인라인 스크립트는 쓰지 않는다(`public/hm-intro.js`처럼 파일로 둔다. `astro.config.mjs`의 `assetsInlineLimit: 0`이 작은 번들 스크립트의 인라인화를 막는다).
+- 이미지·영상 우클릭/끌기 방지는 `src/scripts/protect.ts` + `pages.css` 끝부분. **억제용일 뿐 완전한 방어가 아니다**(미디어 주소가 공개라 개발자 도구로는 받을 수 있음). 모달은 프롬프트 영역(`.prompt`)만 텍스트 선택 가능.
+- 파비콘: `public/favicon.svg|ico`, `apple-touch-icon.png`(검정 바탕 + 프라이머리 점).

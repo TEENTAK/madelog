@@ -7,30 +7,30 @@ const { id } = Astro.props;
   <div class="modal mv-modal" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} tabindex="-1">
     <div class="viewer">
       <div class="mv-stage">
-        <img data-v="img" alt="" decoding="async" hidden />
-        <video data-v="video" controls playsinline preload="metadata" hidden></video>
+        <img data-v="img" alt="" decoding="async" draggable="false" hidden />
+        <video data-v="video" controls controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback playsinline preload="metadata" hidden></video>
       </div>
-      <button type="button" class="arr" data-v="prev" aria-label="이전" style="left:16px">‹</button>
-      <button type="button" class="arr" data-v="next" aria-label="다음" style="right:16px">›</button>
+      <button type="button" class="arr mv-arr--l" data-v="prev" aria-label="이전">‹</button>
+      <button type="button" class="arr mv-arr--r" data-v="next" aria-label="다음">›</button>
       <div class="viewer-strip" data-v="strip"></div>
       <div class="viewer-count" data-v="count"></div>
     </div>
     <div class="panel">
       <button type="button" class="close" data-v="close" aria-label="닫기">✕</button>
       <h2 data-v="title" id={`${id}-title`}></h2>
-      <div class="tags" style="margin-top:12px"><span class="tag tag--type" data-v="kind"></span><span class="tag tag--model" data-v="label"></span></div>
+      <div class="tags mv-tags"><span class="tag tag--type" data-v="kind"></span><span class="tag tag--model" data-v="label"></span></div>
       <div data-v="refs-wrap" hidden>
-        <div class="lab" style="margin-top:20px">REFERENCES</div>
+        <div class="lab mv-lab">REFERENCES</div>
         <div class="refs" data-v="refs"></div>
       </div>
       <div data-v="prompt-wrap" hidden>
-        <div class="lab" style="margin-top:20px">PROMPT</div>
-        <div class="prompt-head" style="margin-top:12px"><span>생성 프롬프트</span><button type="button" class="pill pill--primary" data-v="copy">복사</button></div>
+        <div class="lab mv-lab">PROMPT</div>
+        <div class="prompt-head mv-phead"><span>생성 프롬프트</span><button type="button" class="pill pill--primary" data-v="copy">복사</button></div>
         <div class="pf" data-v="pf"><div class="prompt" data-v="prompt"></div></div>
-        <button type="button" class="pill" data-v="more" aria-expanded="false" style="margin-top:10px;align-self:flex-start" hidden>전체 보기 ↓</button>
+        <button type="button" class="pill mv-more" data-v="more" aria-expanded="false" hidden>전체 보기 ↓</button>
       </div>
-      <div class="lab" style="margin-top:20px">DETAILS</div>
-      <div data-v="details" style="margin-top:4px"></div>
+      <div class="lab mv-lab">DETAILS</div>
+      <div class="mv-details" data-v="details"></div>
     </div>
   </div>
 </div>

@@ -4,7 +4,6 @@
 img.im,img.lb-fg{display:block;object-fit:cover;width:100%}
 img.im{height:100%}
 img.lb-fg{width:auto}
-.vwin img.im{height:100%}
 
 /* 섹션 제목 */
 .sec-h{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
@@ -39,7 +38,7 @@ img.lb-fg{width:auto}
 .empty{padding:96px 0;text-align:center;color:var(--muted);font-size:15px;line-height:1.8}
 .empty b{display:block;color:var(--ink);font:700 22px var(--font-display);margin-bottom:8px}
 [hidden]{display:none!important}
-.card .im video,.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* 작품 상세 */
 .sec{padding-top:80px}
@@ -75,13 +74,10 @@ img.lb-fg{width:auto}
 .refbtn:focus-visible,.clipbtn:focus-visible{outline:2px solid var(--ink);outline-offset:4px;border-radius:14px}
 .mv-dim{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:40px;background:rgba(0,0,0,.6)}
 #mv-2{z-index:110;background:rgba(0,0,0,.45)}
-.mv-dim[hidden]{display:none}
 .mv-modal{width:min(1100px,100%);height:min(680px,100%);outline:none;grid-template-columns:minmax(0,1fr) 360px}
 .mv-modal .viewer{min-width:0;min-height:0;flex-direction:column;justify-content:flex-start;gap:14px;padding:20px 0 16px}
 .mv-stage{flex:1 1 0;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;padding:0 20px;box-sizing:border-box}
 .mv-stage img,.mv-stage video{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:6px}
-.mv-stage [hidden]{display:none}
-.mv-modal .arr[hidden],.mv-modal [hidden]{display:none}
 .mv-modal .viewer-strip,.mv-modal .viewer-count{position:static;flex:none;width:100%}
 .mv-modal .viewer-count{margin-top:2px}
 .mv-modal .viewer-strip{flex-wrap:nowrap;overflow-x:auto;justify-content:safe center;padding:0 16px;box-sizing:border-box;scrollbar-width:none}
@@ -92,6 +88,12 @@ img.lb-fg{width:auto}
 .mv-modal .rimg img{width:100%;height:100%;object-fit:cover;display:block}
 .mv-modal .refs .ref{cursor:pointer}
 .mv-modal .prompt{white-space:pre-wrap}
+.mv-arr--l{left:16px}.mv-arr--r{right:16px}
+.mv-tags{margin-top:12px}
+.mv-lab{margin-top:20px}
+.mv-phead{margin-top:12px}
+.mv-more{margin-top:10px;align-self:flex-start}
+.mv-details{margin-top:4px}
 .pf--clamp .prompt{max-height:calc(4 * 22px + 24px);overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 @media(max-width:760px){
   .mv-dim{padding:0;align-items:flex-end}
@@ -148,7 +150,6 @@ img.lb-fg{width:auto}
 @media(prefers-reduced-motion:reduce){.hm-intro *{animation:none!important}}
 
 /* 이미지 목록: 묶음 열기 */
-.tile[hidden]{display:none}
 .tile.sk .im{color:transparent}
 .tile.sk .ov{opacity:0}
 
@@ -173,3 +174,9 @@ img.lb-fg{width:auto}
   .pill.on:active,.chip.on:active{background:var(--ink)}
   .pill--primary:active,.chip--primary:active{background:var(--primary-press)}
 }
+
+/* 미디어 저장 억제(protect.ts 와 한 쌍): 이미지·영상 끌기·선택 방지, 모달은 프롬프트 영역만 선택 가능 */
+img,video{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}
+img,video,.media,.tile,.vwin{-webkit-user-select:none;user-select:none}
+.mv-dim{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.mv-dim .prompt,.mv-dim .prompt *{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}

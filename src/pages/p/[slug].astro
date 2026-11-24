@@ -68,7 +68,7 @@ const clipItems = d.clips.map((c) => ({
 
     <section aria-label="영상 재생">
       <div class="player" id="player" style={`--ar:${first.ar.toFixed(4)}`}>
-        <video id="player-video" src={first.src} poster={posterUrl(work)} controls playsinline preload="metadata"></video>
+        <video id="player-video" src={first.src} poster={posterUrl(work)} controls controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback playsinline preload="metadata"></video>
         <span class="player__label" id="player-label">{first.label}</span>
       </div>
       {sources.length > 1 && (
