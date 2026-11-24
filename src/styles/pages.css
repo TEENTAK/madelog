@@ -32,8 +32,9 @@ img.lb-fg{width:auto}
 
 /* 목록 도구줄(필터·검색·정렬) */
 .toolbar{padding-top:26px;padding-bottom:34px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-.chips{display:flex;gap:7px;flex-wrap:wrap}
-.tools{display:flex;gap:8px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.chips-sep{width:1px;height:24px;margin:0 4px;background:var(--line);flex:none}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .search{height:44px;width:215px;border:0;border-radius:999px;background:var(--sf);padding:0 15px;font-size:13px}
 .empty{padding:96px 0;text-align:center;color:var(--muted);font-size:15px;line-height:1.8}
 .empty b{display:block;color:var(--ink);font:700 22px var(--font-display);margin-bottom:8px}

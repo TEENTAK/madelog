@@ -1,4 +1,4 @@
-// 이미지 목록: 12개씩 열기(처음 한 번은 자동, 이후 "더 보기"), 모델 필터, 영상 리소스 포함 스위치.
+// 이미지 목록: 12개씩 열기(처음 한 번은 자동, 이후 "더 보기"), 모델·태그 필터, 검색(제목·태그), 정렬, 영상 리소스 포함 스위치.
 // 타일은 모두 HTML에 들어 있고 hidden 으로 숨겨져 있다. 보이는 묶음이 바뀔 때마다 열 4개에 순서대로 다시 나눠 담는다.
 const PAGE = 12; // pages/images/index.astro 의 PAGE 와 같은 값
 
@@ -10,12 +10,24 @@ export function initImageList() {
   const cols = [...masonry.querySelectorAll<HTMLElement>('.mc')];
   const tiles = [...masonry.querySelectorAll<HTMLElement>('[data-tile]')].sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
   const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-model-chip]')];
+  const tagChips = [...document.querySelectorAll<HTMLButtonElement>('[data-tag-chip]')];
   const sw = document.querySelector<HTMLButtonElement>('[data-res-switch]');
+  const search = document.querySelector<HTMLInputElement>('[data-search]');
+  const sortBtn = document.querySelector<HTMLButtonElement>('[data-sort]');
+  const emptyMark = document.querySelector<HTMLElement>('[data-empty]');
+  // 정렬을 바꿔도 모달의 이전·다음 순서가 화면과 같도록 data-order 를 다시 매긴다(최신순 = 원래 값)
+  const base = new Map(tiles.map((t) => [t, Number(t.dataset.order)]));
+  const last = Math.max(...base.values());
 
-  let model = '', withRes = false, shown = PAGE;
+  let model = '', tag = '', q = '', desc = true, withRes = false, shown = PAGE;
   let autoPending = true, busy = false, failed: HTMLElement[] = [];
 
-  const matching = () => tiles.filter((t) => (!t.dataset.res || withRes) && (!model || t.dataset.model === model));
+  const hit = (t: HTMLElement) => {
+    const n = q.trim().toLowerCase();
+    return !n || (t.dataset.title ?? '').toLowerCase().includes(n) || (t.dataset.tags ?? '').toLowerCase().includes(n);
+  };
+  const matching = () => tiles.filter((t) => (!t.dataset.res || withRes) && (!model || t.dataset.model === model) && (!tag || (t.dataset.tags ?? '').split('|').includes(tag)) && hit(t))
+    .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
   const imgOf = (t: HTMLElement) => t.querySelector<HTMLImageElement>('img')!;
 
   function layout() {
@@ -63,6 +75,7 @@ export function initImageList() {
       more.innerHTML = `<div class="end">ALL ${total} STILLS LOADED</div><button type="button" class="chip" data-top>맨 위로 ↑</button>`;
     }
     more.hidden = !more.innerHTML;
+    if (emptyMark) emptyMark.hidden = total > 0;
   }
 
   more.addEventListener('click', (e) => {
@@ -82,6 +95,23 @@ export function initImageList() {
     layout(); watch(matching().slice(0, shown));
   }
   chips.forEach((c) => c.addEventListener('click', () => setModel(c.dataset.modelChip ?? '')));
+  search?.addEventListener('input', () => {
+    q = search.value; shown = PAGE;
+    layout(); watch(matching().slice(0, shown));
+  });
+  function setSort(d: boolean) {
+    desc = d; shown = PAGE;
+    tiles.forEach((t) => { t.dataset.order = String(desc ? base.get(t)! : last - base.get(t)!); });
+    if (sortBtn) sortBtn.textContent = desc ? '최신순 ↓' : '오래된순 ↑';
+    layout(); watch(matching().slice(0, shown));
+  }
+  sortBtn?.addEventListener('click', () => setSort(!desc));
+  function setTag(v: string) {
+    tag = v; shown = PAGE;
+    tagChips.forEach((c) => { const on = (c.dataset.tagChip ?? '') === v; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    layout(); watch(matching().slice(0, shown));
+  }
+  tagChips.forEach((c) => c.addEventListener('click', () => setTag(c.dataset.tagChip ?? '')));
   function setRes(on: boolean) {
     withRes = on; shown = PAGE;
     sw?.setAttribute('aria-checked', String(on));
@@ -107,6 +137,8 @@ export function initImageList() {
       const t = tiles.find((x) => x.dataset.id === id); if (!t) return;
       if (t.dataset.res && !withRes) setRes(true);
       if (model && t.dataset.model !== model) setModel('');
+      if (tag && !(t.dataset.tags ?? '').split('|').includes(tag)) setTag('');
+      if (q && !hit(t)) { q = ''; if (search) search.value = ''; layout(); }
       const idx = matching().indexOf(t);
       if (idx >= shown) { shown = Math.ceil((idx + 1) / PAGE) * PAGE; layout(); watch(matching().slice(0, shown)); }
     },

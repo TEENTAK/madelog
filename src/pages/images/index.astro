@@ -11,6 +11,10 @@ const titles = Object.fromEntries((await getWorks()).map((w) => [w.id, w.data.ti
 const solo = images.filter((i) => !i.data.from);
 const resources = images.filter((i) => i.data.from);
 const models = [...new Set(images.map((i) => i.data.model))];
+// 태그 필터: 낱장 화보에 달린 태그를 많이 쓴 순서로(같으면 이름순)
+const tagCount = new Map<string, number>();
+solo.forEach((i) => i.data.tags.forEach((t) => tagCount.set(t, (tagCount.get(t) ?? 0) + 1)));
+const tags = [...tagCount.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ko')).map(([t]) => t);
 // 처음 열 때 보이는 것 = 낱장 화보 앞쪽 PAGE개. 나머지는 hidden 으로 싣고 스크립트가 묶음씩 연다
 const shownIds = new Set(solo.slice(0, PAGE).map((i) => i.id));
 const cols = toColumns([...solo, ...resources], 4);
@@ -27,13 +31,25 @@ const cols = toColumns([...solo, ...resources], 4);
     <div class="chips">
       <button class="chip on" aria-pressed="true" data-model-chip="">모든 모델</button>
       {models.map((m) => <button class="chip" aria-pressed="false" data-model-chip={m}>{m}</button>)}
+      {tags.length > 0 && (
+        <>
+          <span class="chips-sep" aria-hidden="true"></span>
+          <button class="chip on" aria-pressed="true" data-tag-chip="">전체</button>
+          {tags.map((t) => <button class="chip" aria-pressed="false" data-tag-chip={t}>{t}</button>)}
+        </>
+      )}
     </div>
-    {resources.length > 0 && <button class="pill sw" role="switch" aria-checked="false" data-res-switch><span class="knob"></span>영상 리소스 포함</button>}
+    <div class="tools">
+      {resources.length > 0 && <button class="pill sw" role="switch" aria-checked="false" data-res-switch><span class="knob"></span>영상 리소스 포함</button>}
+      <input class="search" data-search type="search" aria-label="검색" placeholder="제목, 태그 검색" />
+      <button class="chip" data-sort>최신순 ↓</button>
+    </div>
   </section>
   <main class="w" style="padding-bottom:80px">
     {images.length ? (
       <>
         <div class="masonry" data-masonry>{cols.map((col) => <div class="mc">{col.map((i) => <ImageTile item={i} sourceTitle={i.data.from ? titles[i.data.from] : undefined} order={images.indexOf(i)} hidden={!shownIds.has(i.id)} />)}</div>)}</div>
+        <p class="empty" data-empty hidden><b>찾는 이미지가 없습니다</b>다른 검색어나 태그를 시도해 보세요.</p>
         <div data-sentinel aria-hidden="true"></div>
         <div class="more" data-more hidden></div>
         <noscript><style>{'.tile[hidden]{display:block}'}</style></noscript>
