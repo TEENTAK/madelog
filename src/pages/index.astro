@@ -41,9 +41,9 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
               {heroVideo && <video class="hero-video" data-src={heroVideo} poster={posterUrl(featured)} muted loop playsinline disablepictureinpicture disableremoteplayback preload="none" aria-hidden="true" tabindex="-1"></video>}
               <div class="vwin__scrim" aria-hidden="true"></div>
               {heroVideo ? (
-                <button type="button" class="vwin__hit" data-hv="toggle" aria-label="대표 영상 재생"><span class="vwin__play" aria-hidden="true">▶</span></button>
+                <button type="button" class="vwin__hit" data-hv="toggle" aria-label="대표 영상 재생"><span class="vwin__play" aria-hidden="true"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg><svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1" /><rect x="13.5" y="5" width="4" height="14" rx="1" /></svg></span></button>
               ) : (
-                <a class="vwin__hit" href={`/p/${featured.id}`} tabindex="-1" aria-hidden="true"><span class="vwin__play">▶</span></a>
+                <a class="vwin__hit" href={`/p/${featured.id}`} tabindex="-1" aria-hidden="true"><span class="vwin__play"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg><svg class="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1" /><rect x="13.5" y="5" width="4" height="14" rx="1" /></svg></span></a>
               )}
               <div class="vwin__tags">
                 {featured.data.model.map((m) => <span class="tag tag--model">{m}</span>)}
