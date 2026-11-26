@@ -114,6 +114,9 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
     import { bindImageViewer } from '../scripts/image-viewer';
     bindPreview();
     initHeroMotion();
+    // 마퀴는 화면에 보일 때만 움직인다
+    const mq = document.querySelector<HTMLElement>('.mq');
+    if (mq && 'IntersectionObserver' in window) new IntersectionObserver((e) => mq.classList.toggle('is-off', !e[0].isIntersecting)).observe(mq);
     initHeroVideo();
     // Stills 타일을 크게 열어 보는 뷰어 (이미지 페이지와 같은 방식, #<id> 주소로 공유)
     const root = document.getElementById('mv-1');

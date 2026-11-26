@@ -187,3 +187,29 @@ img,video,.media,.tile,.vwin{-webkit-user-select:none;user-select:none}
   .toolbar .tools{flex:1 1 100%;flex-wrap:nowrap}
   .toolbar .search{flex:1;min-width:0;width:auto}
 }
+
+/* 모달 열기·닫기: 배경 페이드 + 창이 살짝 떠오름(모바일 시트는 아래에서). viewer.ts 의 OUT_MS(200ms)와 짝 */
+.mv-dim{opacity:0;transition:opacity .2s var(--ease)}
+.mv-dim.is-in{opacity:1}
+.mv-modal{transform:translateY(14px) scale(.985);transition:transform .28s var(--ease)}
+.mv-dim.is-in .mv-modal{transform:none}
+.mv-stage img{transition:opacity .25s var(--ease)}
+.mv-stage img.is-loading{opacity:0}
+.mv-modal .viewer{touch-action:none}
+@media(max-width:760px){.mv-modal{transform:translateY(100%)}.mv-dim.is-in .mv-modal{transform:none}}
+@media(prefers-reduced-motion:reduce){.mv-dim,.mv-modal,.mv-stage img{transition:none}}
+
+/* 마퀴: 화면 밖에서는 멈춤 */
+.mq.is-off .mq-t{animation-play-state:paused}
+
+/* 페이지 전환: 페이지끼리 짧은 크로스페이드, 누른 썸네일 ↔ 상세 플레이어는 이어지는 모션(public/vt.js) */
+@view-transition{navigation:auto}
+.player{view-transition-name:work-media}
+::view-transition-group(work-media){animation-duration:.42s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.22s}
+::view-transition-old(work-media),::view-transition-new(work-media){height:100%;object-fit:cover}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+
+/* 404 */
+.nf-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.empty-act{margin-top:18px;display:flex;justify-content:center}

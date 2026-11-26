@@ -47,7 +47,7 @@ const cols = toColumns([...solo, ...resources], 4);
     {images.length ? (
       <>
         <div class="masonry" data-masonry>{cols.map((col) => <div class="mc">{col.map((i) => <ImageTile item={i} order={images.indexOf(i)} hidden={!shownIds.has(i.id)} />)}</div>)}</div>
-        <p class="empty" data-empty hidden><b>찾는 이미지가 없습니다</b>다른 검색어나 태그를 시도해 보세요.</p>
+        <div class="empty" data-empty hidden><b>찾는 이미지가 없습니다</b>검색어를 바꾸거나 필터를 풀어 보세요.<div class="empty-act"><button type="button" class="chip" data-reset>필터 초기화</button></div></div>
         <div data-sentinel aria-hidden="true"></div>
         <div class="more" data-more hidden></div>
         <noscript><style>{'.tile[hidden]{display:block}'}</style></noscript>

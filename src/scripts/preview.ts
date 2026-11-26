@@ -8,8 +8,11 @@ export function bindPreview(scope: ParentNode = document) {
     if (card.dataset.previewBound) return;
     card.dataset.previewBound = '1';
     let video: HTMLVideoElement | null = null;
-    const stop = () => { video?.remove(); video = null; };
-    card.addEventListener('pointerenter', () => {
+    let timer = 0;
+    const stop = () => { clearTimeout(timer); video?.remove(); video = null; };
+    // 마우스가 그리드를 지나가기만 할 때는 받지 않도록 150ms 머문 뒤 시작
+    card.addEventListener('pointerenter', () => { clearTimeout(timer); timer = window.setTimeout(start, 150); });
+    const start = () => {
       const media = card.querySelector('.media');
       if (!media || video) return;
       video = document.createElement('video');
@@ -20,7 +23,7 @@ export function bindPreview(scope: ParentNode = document) {
       video.addEventListener('error', stop);
       media.prepend(video);
       video.play().catch(stop);
-    });
+    };
     card.addEventListener('pointerleave', stop);
     card.addEventListener('focusout', stop);
   });

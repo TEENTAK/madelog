@@ -19,6 +19,8 @@ export type OpenOpts = {
 };
 
 const stack: Layer[] = [];
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const OUT_MS = 200; // 닫힘 애니메이션 길이(pages.css .mv-dim 과 같은 값)
 const sync = () => { document.body.style.overflow = stack.length ? 'hidden' : ''; };
 
 export class Layer {
@@ -29,6 +31,7 @@ export class Layer {
   opts: OpenOpts = {};
   opener: HTMLElement | null = null;
   isOpen = false;
+  private outTimer = 0;
   private q = (n: string) => this.root.querySelector<HTMLElement>(`[data-v="${n}"]`)!;
 
   constructor(root: HTMLElement) {
@@ -36,6 +39,7 @@ export class Layer {
     this.dialog = root.querySelector<HTMLElement>('[role=dialog]')!;
     this.q('close').addEventListener('click', () => this.requestClose());
     root.addEventListener('click', (e) => { if (e.target === root) this.requestClose(); });
+    this.bindSwipe();
     this.q('prev').addEventListener('click', () => this.go(this.cur - 1));
     this.q('next').addEventListener('click', () => this.go(this.cur + 1));
     const more = this.q('more');
@@ -50,6 +54,23 @@ export class Layer {
     });
   }
 
+  // 터치: 좌우로 밀면 이전·다음, 아래로 끌면 닫기(영상 조작 막대 위에서는 무시)
+  private bindSwipe() {
+    const area = this.root.querySelector<HTMLElement>('.viewer'); if (!area) return;
+    let x0 = 0, y0 = 0, on = false;
+    area.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'touch' || (e.target as Element).closest('video, button')) { on = false; return; }
+      on = true; x0 = e.clientX; y0 = e.clientY;
+    });
+    area.addEventListener('pointerup', (e) => {
+      if (!on) return; on = false;
+      const dx = e.clientX - x0, dy = e.clientY - y0;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) this.go(this.cur + (dx < 0 ? 1 : -1));
+      else if (dy > 90 && dy > Math.abs(dx) * 1.3) this.requestClose();
+    });
+    area.addEventListener('pointercancel', () => { on = false; });
+  }
+
   requestClose() { this.opts.onClose ? this.opts.onClose() : this.close(); }
 
   go(i: number) {
@@ -62,7 +83,10 @@ export class Layer {
     this.items = items; this.opts = opts;
     if (!this.isOpen) {
       this.opener = opener ?? (document.activeElement as HTMLElement | null);
+      clearTimeout(this.outTimer); this.root.classList.remove('is-in');
       this.isOpen = true; this.root.hidden = false; stack.push(this); sync();
+      // 다음 프레임에 is-in → 배경 페이드 + 창이 살짝 떠오르며 열림(모바일은 아래에서 올라옴)
+      requestAnimationFrame(() => requestAnimationFrame(() => this.root.classList.add('is-in')));
       this.dialog.focus();
     }
     this.buildStrip();
@@ -71,8 +95,12 @@ export class Layer {
 
   close(restoreFocus = true) {
     if (!this.isOpen) return;
-    this.isOpen = false; this.root.hidden = true;
+    this.isOpen = false;
     (this.q('video') as HTMLVideoElement).pause();
+    this.root.classList.remove('is-in');
+    clearTimeout(this.outTimer);
+    if (reduced()) this.root.hidden = true;
+    else this.outTimer = window.setTimeout(() => { if (!this.isOpen) this.root.hidden = true; }, OUT_MS);
     const k = stack.indexOf(this); if (k >= 0) stack.splice(k, 1); sync();
     if (restoreFocus) this.opener?.focus();
   }
@@ -113,7 +141,13 @@ export class Layer {
     const img = this.q('img') as HTMLImageElement, vid = this.q('video') as HTMLVideoElement;
     if (it.kind === 'image') {
       vid.pause(); vid.removeAttribute('src'); vid.hidden = true;
-      img.hidden = false; img.src = it.src; img.alt = it.title;
+      img.hidden = false; img.alt = it.title;
+      // 이미지 바꿀 때 크로스페이드: 새 이미지가 도착하면 나타난다
+      if (img.getAttribute('src') !== it.src) {
+        img.classList.add('is-loading');
+        img.onload = img.onerror = () => img.classList.remove('is-loading');
+        img.src = it.src;
+      }
     } else {
       img.hidden = true; vid.hidden = false; vid.src = it.src; vid.load();
     }

@@ -31,7 +31,7 @@ const tags = [...new Set(works.flatMap((w) => w.data.tags))];
       <section class="gal" data-grid aria-label="영상 작품 목록">
         {works.map((w, i) => <VideoCard work={w} variant="row" eager={i < 8} />)}
       </section>
-      <p class="empty" data-empty hidden><b>찾는 작품이 없습니다</b>다른 검색어나 태그를 시도해 보세요.</p>
+      <div class="empty" data-empty hidden><b>찾는 작품이 없습니다</b>검색어를 바꾸거나 장르 필터를 풀어 보세요.<div class="empty-act"><button type="button" class="chip" data-reset>필터 초기화</button></div></div>
       <div class="more" data-more hidden><button class="chip">더 보기 <small></small></button></div>
       <div class="more" data-end hidden><div class="end">마지막 작품입니다</div></div>
     </main>

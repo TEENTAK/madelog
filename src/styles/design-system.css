@@ -1,14 +1,17 @@
 /* MADE.LOG design system v0.8
    모든 페이지 공통. 색·글꼴·크기·모션 값은 :root 토큰에서만 바꾼다.
-   v0.8(2026-11-26): 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
+   v0.8(2026-11-26): 태그 글자색(배경 톤의 진한 색)·세로 중앙 보정, 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
    구성: 1 TOKENS · 2 BASE · 3 LAYOUT · 4 NAV · 5 HERO(5.1 Hero · 5.2 Video window · 5.2b Video controls · 5.3 Counter · 5.4 Outline text) · 6 COMPONENTS(6.1 Pill · 6.2 Switch · 6.3 Tag · 6.4 Media · 6.5 Card · 6.6 Rows · 6.6b Vgrid · 6.6c Letterbox · 6.7 Tile · 6.8 Badge · 6.9 Arrow · 6.10 Modal · 6.10b Accordion · 6.11 Detail row · 6.12 Ref · 6.13 Note · 6.14 Skeleton · 6.15 More · 6.16 Primary) · 7 MOTION(7.1 Reveal · 7.2 Hero scroll) · 8 STATE PREVIEW
-   새 장르 색 추가: ① --tag-<이름> 토큰 한 줄 ② .tag--<이름>{--tone:var(--tag-<이름>)} 한 줄 */
+   새 장르 색 추가: ① --tag-<이름>·--tag-<이름>-ink 토큰(글자색 = 같은 색상 각도, L≈0.45, 배경 대비 6:1 이상) ② .tag--<이름>{--tone:…;--tone-ink:…} 한 줄 */
 
 /* 1. TOKENS */
 :root{
   --ink:#111;--muted:#656565;--caption:#6b6b6b;--line:#e7e7e7;--sf:#f6f6f4;--white:#fff;--primary:#e4f222;--primary-press:#d2df12;--primary-line:#bcc631;--on-primary:var(--ink);
   --tag-lime:#e5f2b7;--tag-lavender:#e6ddff;--tag-peach:#ffe0c2;--tag-sky:#d8eff7;
   --tag-rose:#ffd9e2;--tag-mint:#d2f0e0;--tag-butter:#fff2b8;--tag-sand:#eee3d1;--tag-periwinkle:#dce3ff;
+  /* 태그 글자색: 배경 파스텔과 같은 색상 각도(OKLCH H)에서 밝기 L≈0.45로 낮춘 색. 배경 대비 6:1 이상 */
+  --tag-lime-ink:#515c00;--tag-lavender-ink:#5b4685;--tag-peach-ink:#7a4800;--tag-sky-ink:#2d5e6d;
+  --tag-rose-ink:#803c51;--tag-mint-ink:#1a6144;--tag-butter-ink:#6a5a05;--tag-sand-ink:#65502c;--tag-periwinkle-ink:#464f83;--tag-model-ink:#5e5e5b;
   --font-body:Pretendard,"Pretendard Variable","Noto Sans KR",system-ui,sans-serif;
   --font-display:"Inter Tight",Pretendard,sans-serif;
   --font-mono:"Geist Mono",ui-monospace,Menlo,monospace;
@@ -123,10 +126,11 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .knob::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--white);transition:transform var(--t-base) var(--ease)}
 .sw[aria-checked="true"] .knob{background:var(--ink)}
 .sw[aria-checked="true"] .knob::after{transform:translateX(14px);background:var(--primary)}
-.tag{display:inline-flex;align-items:center;padding:6px 9px;border-radius:var(--r-pill);background:var(--tone,var(--sf));font-size:12px;font-weight:700;line-height:1;color:var(--ink)}
-.tag--lime{--tone:var(--tag-lime)}.tag--lavender{--tone:var(--tag-lavender)}.tag--peach{--tone:var(--tag-peach)}.tag--sky{--tone:var(--tag-sky)}
-.tag--rose{--tone:var(--tag-rose)}.tag--mint{--tone:var(--tag-mint)}.tag--butter{--tone:var(--tag-butter)}.tag--sand{--tone:var(--tag-sand)}.tag--periwinkle{--tone:var(--tag-periwinkle)}
-.tag--model{--tone:var(--sf)}
+/* 높이 25px: 위 7px·아래 6px. 12px 글자(line-height 1)의 잉크가 위로 0.5~1px 치우치던 것을 보정(1x·2x 화면 실측) */
+.tag{display:inline-flex;align-items:center;padding:7px 9px 6px;border-radius:var(--r-pill);background:var(--tone,var(--sf));font-size:12px;font-weight:700;line-height:1;color:var(--tone-ink,var(--ink))}
+.tag--lime{--tone:var(--tag-lime);--tone-ink:var(--tag-lime-ink)}.tag--lavender{--tone:var(--tag-lavender);--tone-ink:var(--tag-lavender-ink)}.tag--peach{--tone:var(--tag-peach);--tone-ink:var(--tag-peach-ink)}.tag--sky{--tone:var(--tag-sky);--tone-ink:var(--tag-sky-ink)}
+.tag--rose{--tone:var(--tag-rose);--tone-ink:var(--tag-rose-ink)}.tag--mint{--tone:var(--tag-mint);--tone-ink:var(--tag-mint-ink)}.tag--butter{--tone:var(--tag-butter);--tone-ink:var(--tag-butter-ink)}.tag--sand{--tone:var(--tag-sand);--tone-ink:var(--tag-sand-ink)}.tag--periwinkle{--tone:var(--tag-periwinkle);--tone-ink:var(--tag-periwinkle-ink)}
+.tag--model{--tone:var(--sf);--tone-ink:var(--tag-model-ink)}
 .tag--new{--tone:var(--primary);font-family:var(--font-mono);letter-spacing:.04em}
 .tag--type{--tone:var(--ink);color:var(--white)}
 .g1{background:linear-gradient(135deg,#2b2b2b,#6a6a6a)}

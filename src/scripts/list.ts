@@ -55,5 +55,11 @@ if (root) {
   search.addEventListener('input', () => { q = search.value; reset(); });
   sortBtn.addEventListener('click', () => { desc = !desc; reset(); });
   moreBtn.addEventListener('click', () => { shown += PAGE; render(); });
+  // 결과 없음 → 장르·검색 초기화
+  root.querySelector('[data-reset]')?.addEventListener('click', () => {
+    tag = ''; q = ''; search.value = '';
+    const u = new URL(location.href); u.searchParams.delete('genre'); history.replaceState(null, '', u);
+    reset(); search.focus();
+  });
   render();
 }

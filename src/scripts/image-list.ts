@@ -20,6 +20,29 @@ export function initImageList() {
   const last = Math.max(...base.values());
 
   let model = '', tag = '', q = '', desc = true, withRes = false, shown = PAGE;
+
+  // 필터·검색·정렬은 주소에 남긴다(?model=&tag=&q=&sort=old&res=1). 새로고침·공유해도 같은 목록
+  const params = new URLSearchParams(location.search);
+  const known = (list: HTMLButtonElement[], key: 'modelChip' | 'tagChip', v: string | null) => (v && list.some((c) => c.dataset[key] === v) ? v : '');
+  model = known(chips, 'modelChip', params.get('model'));
+  tag = known(tagChips, 'tagChip', params.get('tag'));
+  q = params.get('q') ?? '';
+  desc = params.get('sort') !== 'old';
+  withRes = !!sw && params.get('res') === '1';
+  const syncUrl = () => {
+    const u = new URL(location.href);
+    const set = (k: string, v: string) => (v ? u.searchParams.set(k, v) : u.searchParams.delete(k));
+    set('model', model); set('tag', tag); set('q', q.trim()); set('sort', desc ? '' : 'old'); set('res', withRes ? '1' : '');
+    if (u.href !== location.href) history.replaceState(history.state, '', u);
+  };
+  const paint = () => {
+    chips.forEach((c) => { const on = (c.dataset.modelChip ?? '') === model; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    tagChips.forEach((c) => { const on = (c.dataset.tagChip ?? '') === tag; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    sw?.setAttribute('aria-checked', String(withRes));
+    if (search && search.value !== q) search.value = q;
+    tiles.forEach((t) => { t.dataset.order = String(desc ? base.get(t)! : last - base.get(t)!); });
+    if (sortBtn) sortBtn.textContent = desc ? '최신순 ↓' : '오래된순 ↑';
+  };
   let autoPending = true, busy = false, failed: HTMLElement[] = [];
 
   const hit = (t: HTMLElement) => {
@@ -31,6 +54,7 @@ export function initImageList() {
   const imgOf = (t: HTMLElement) => t.querySelector<HTMLImageElement>('img')!;
 
   function layout() {
+    syncUrl();
     const vis = matching().slice(0, shown);
     tiles.forEach((t) => { t.hidden = true; });
     vis.forEach((t, i) => { t.hidden = false; cols[i % cols.length].appendChild(t); });
@@ -90,8 +114,7 @@ export function initImageList() {
   });
 
   function setModel(m: string) {
-    model = m; shown = PAGE;
-    chips.forEach((c) => { const on = (c.dataset.modelChip ?? '') === m; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    model = m; shown = PAGE; paint();
     layout(); watch(matching().slice(0, shown));
   }
   chips.forEach((c) => c.addEventListener('click', () => setModel(c.dataset.modelChip ?? '')));
@@ -100,21 +123,17 @@ export function initImageList() {
     layout(); watch(matching().slice(0, shown));
   });
   function setSort(d: boolean) {
-    desc = d; shown = PAGE;
-    tiles.forEach((t) => { t.dataset.order = String(desc ? base.get(t)! : last - base.get(t)!); });
-    if (sortBtn) sortBtn.textContent = desc ? '최신순 ↓' : '오래된순 ↑';
+    desc = d; shown = PAGE; paint();
     layout(); watch(matching().slice(0, shown));
   }
   sortBtn?.addEventListener('click', () => setSort(!desc));
   function setTag(v: string) {
-    tag = v; shown = PAGE;
-    tagChips.forEach((c) => { const on = (c.dataset.tagChip ?? '') === v; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+    tag = v; shown = PAGE; paint();
     layout(); watch(matching().slice(0, shown));
   }
   tagChips.forEach((c) => c.addEventListener('click', () => setTag(c.dataset.tagChip ?? '')));
   function setRes(on: boolean) {
-    withRes = on; shown = PAGE;
-    sw?.setAttribute('aria-checked', String(on));
+    withRes = on; shown = PAGE; paint();
     layout(); watch(matching().slice(0, shown));
   }
   sw?.addEventListener('click', () => setRes(sw.getAttribute('aria-checked') !== 'true'));
@@ -129,6 +148,13 @@ export function initImageList() {
     io.observe(sentinel);
   } else { autoPending = false; }
 
+  // 결과 없음 → 필터 초기화(정렬은 유지)
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    model = ''; tag = ''; q = ''; withRes = false; shown = PAGE; paint();
+    layout(); watch(matching().slice(0, shown)); search?.focus();
+  });
+
+  paint();
   layout(); watch(matching().slice(0, shown));
 
   return {
@@ -138,7 +164,7 @@ export function initImageList() {
       if (t.dataset.res && !withRes) setRes(true);
       if (model && t.dataset.model !== model) setModel('');
       if (tag && !(t.dataset.tags ?? '').split('|').includes(tag)) setTag('');
-      if (q && !hit(t)) { q = ''; if (search) search.value = ''; layout(); }
+      if (q && !hit(t)) { q = ''; paint(); layout(); }
       const idx = matching().indexOf(t);
       if (idx >= shown) { shown = Math.ceil((idx + 1) / PAGE) * PAGE; layout(); watch(matching().slice(0, shown)); }
     },
