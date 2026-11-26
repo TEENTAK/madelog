@@ -40,6 +40,8 @@ export class Layer {
     this.q('next').addEventListener('click', () => this.go(this.cur + 1));
     const more = this.q('more');
     more.addEventListener('click', () => this.clamp(more.getAttribute('aria-expanded') === 'true'));
+    // 접힌 미리보기를 눌러도 펼친다
+    this.q('acc-body').addEventListener('click', () => { if (this.q('pf').classList.contains('is-clamp')) this.clamp(false); });
     const copy = this.q('copy');
     copy.addEventListener('click', async () => {
       try { await navigator.clipboard.writeText(this.items[this.cur].prompt ?? ''); copy.textContent = '복사했습니다'; }
@@ -75,11 +77,22 @@ export class Layer {
     if (restoreFocus) this.opener?.focus();
   }
 
+  // 프롬프트 아코디언: 접힘 = 4줄 미리보기(CSS max-height), 펼침 = 실제 높이까지 열리는 애니메이션
   private clamp(on: boolean) {
-    this.q('pf').classList.toggle('pf--clamp', on);
-    const more = this.q('more');
-    more.setAttribute('aria-expanded', String(!on));
-    more.textContent = on ? '전체 보기 ↓' : '접기 ↑';
+    const pf = this.q('pf'), body = this.q('acc-body');
+    pf.classList.toggle('is-clamp', on);
+    pf.classList.toggle('is-open', !on);
+    this.q('more').setAttribute('aria-expanded', String(!on));
+    if (on) {
+      // 'none'(펼침 완료)에서 접을 때도 움직이도록 현재 높이를 먼저 고정한 뒤 해제
+      if (body.style.maxHeight === 'none') { body.style.maxHeight = `${body.scrollHeight}px`; void body.offsetHeight; }
+      body.style.maxHeight = '';
+    } else {
+      body.style.maxHeight = `${body.scrollHeight}px`;
+      // 다 열리면 높이 제한을 풀어 창 크기가 바뀌어도 잘리지 않게
+      setTimeout(() => { if (pf.classList.contains('is-open')) body.style.maxHeight = 'none'; }, 360); // --t-card(.3s) 뒤
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) body.style.maxHeight = 'none';
+    }
   }
 
   private buildStrip() {
@@ -129,12 +142,15 @@ export class Layer {
 
     // PROMPT (있을 때만, 이미지는 기본 접힘)
     const pw = this.q('prompt-wrap'); pw.hidden = !it.prompt;
-    const more = this.q('more');
     if (it.prompt) {
-      this.q('prompt').textContent = it.prompt; this.clamp(false);
-      const long = this.q('prompt').scrollHeight > 4 * 22 + 24;
-      more.hidden = !long || it.kind !== 'image';
-      if (!more.hidden) this.clamp(true);
+      const pf = this.q('pf'), more = this.q('more') as HTMLButtonElement;
+      this.q('prompt').textContent = it.prompt;
+      pf.classList.remove('is-clamp', 'is-open'); this.q('acc-body').style.maxHeight = '';
+      // 이미지의 긴 프롬프트만 접는다. 짧거나 영상 클립이면 펼친 채 고정(토글 없음)
+      const acc = it.kind === 'image' && this.q('prompt').scrollHeight > 4 * 22 + 24;
+      pf.classList.toggle('acc--static', !acc);
+      more.disabled = !acc;
+      if (acc) this.clamp(true); else more.removeAttribute('aria-expanded');
     }
 
     // DETAILS

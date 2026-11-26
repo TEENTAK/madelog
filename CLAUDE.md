@@ -20,7 +20,7 @@ content/tags.yaml                 태그 사전: 장르 → 색 이름(없는 �
 media-local/                      Git 제외. R2 경로와 같은 구조. public/media 가 이 폴더를 가리킨다
 src/content.config.ts             스키마(Zod). width/height 필수, 극단 비율은 빌드 경고만
 src/lib/media.ts                  미디어 주소는 여기서만 만든다(PUBLIC_MEDIA_BASE_URL, 기본 /media)
-src/styles/design-system.css      디자인 시스템 v0.7 — 캔버스에서 가져온 원본, 함부로 고치지 않는다
+src/styles/design-system.css      디자인 시스템 v0.8 — 캔버스와 같은 파일(캔버스는 이 파일을 업로드해 연결), 고치면 캔버스도 맞춘다
 src/styles/pages.css              페이지 전용 배치 규칙
 src/pages/                        / (전체) · /videos · /images · /p/<슬러그>
 src/scripts/                      viewer.ts(공유 뷰어 모달) · hero-motion.ts(전체 탭 히어로) · image-list.ts(이미지 12개씩·필터)

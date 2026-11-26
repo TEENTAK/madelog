@@ -25,9 +25,16 @@ const { id } = Astro.props;
       </div>
       <div data-v="prompt-wrap" hidden>
         <div class="lab mv-lab">PROMPT</div>
-        <div class="prompt-head mv-phead"><span>생성 프롬프트</span><button type="button" class="pill pill--primary" data-v="copy">복사</button></div>
-        <div class="pf" data-v="pf"><div class="prompt" data-v="prompt"></div></div>
-        <button type="button" class="pill mv-more" data-v="more" aria-expanded="false" hidden>전체 보기 ↓</button>
+        <div class="acc" data-v="pf">
+          <div class="acc__head">
+            <button type="button" class="acc__toggle" data-v="more" aria-expanded="false" aria-controls={`${id}-prompt`}>
+              <span>생성 프롬프트</span>
+              <svg class="acc__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+            </button>
+            <button type="button" class="pill pill--primary" data-v="copy">복사</button>
+          </div>
+          <div class="acc__body" id={`${id}-prompt`} data-v="acc-body"><div class="prompt" data-v="prompt"></div></div>
+        </div>
       </div>
       <div class="lab mv-lab">DETAILS</div>
       <div class="mv-details" data-v="details"></div>

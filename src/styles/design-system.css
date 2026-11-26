@@ -1,6 +1,7 @@
-/* MADE.LOG design system v0.7
+/* MADE.LOG design system v0.8
    모든 페이지 공통. 색·글꼴·크기·모션 값은 :root 토큰에서만 바꾼다.
-   구성: 1 TOKENS · 2 BASE · 3 LAYOUT · 4 NAV · 5 HERO(5.1 Hero · 5.2 Video window · 5.3 Counter · 5.4 Outline text) · 6 COMPONENTS(6.1 Pill · 6.2 Switch · 6.3 Tag · 6.4 Media · 6.5 Card · 6.6 Rows · 6.6b Vgrid · 6.6c Letterbox · 6.7 Tile · 6.8 Badge · 6.9 Arrow · 6.10 Modal · 6.11 Detail row · 6.12 Ref · 6.13 Note · 6.14 Skeleton · 6.15 More · 6.16 Primary) · 7 MOTION(7.1 Reveal · 7.2 Hero scroll) · 8 STATE PREVIEW
+   v0.8(2026-11-26): 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
+   구성: 1 TOKENS · 2 BASE · 3 LAYOUT · 4 NAV · 5 HERO(5.1 Hero · 5.2 Video window · 5.2b Video controls · 5.3 Counter · 5.4 Outline text) · 6 COMPONENTS(6.1 Pill · 6.2 Switch · 6.3 Tag · 6.4 Media · 6.5 Card · 6.6 Rows · 6.6b Vgrid · 6.6c Letterbox · 6.7 Tile · 6.8 Badge · 6.9 Arrow · 6.10 Modal · 6.10b Accordion · 6.11 Detail row · 6.12 Ref · 6.13 Note · 6.14 Skeleton · 6.15 More · 6.16 Primary) · 7 MOTION(7.1 Reveal · 7.2 Hero scroll) · 8 STATE PREVIEW
    새 장르 색 추가: ① --tag-<이름> 토큰 한 줄 ② .tag--<이름>{--tone:var(--tag-<이름>)} 한 줄 */
 
 /* 1. TOKENS */
@@ -36,6 +37,8 @@ button{cursor:pointer;color:inherit}
 .w{width:100%;max-width:var(--page);margin:0 auto;padding:0 var(--gutter)}
 .site-header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.92);border-bottom:1px solid var(--line)}
 .site-header .w{height:var(--header-h);display:flex;align-items:center;justify-content:space-between}
+/* 헤더: 스크롤 중 뒤 이미지가 비쳐도 메뉴가 읽히도록 흐림(지원 브라우저만) */
+@supports((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.site-header{background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px)}}
 .site-footer{border-top:1px solid var(--line)}
 .site-footer .w{height:var(--footer-h);display:flex;align-items:center;justify-content:space-between}
 .brand{font:800 21px var(--font-display);letter-spacing:-.01em}
@@ -67,9 +70,37 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .vwin__tags{position:absolute;left:20px;top:18px;display:flex;gap:8px}
 .vwin__play{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:24px;background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.55)}
 .vwin__time{position:absolute;left:22px;right:22px;bottom:34px;display:flex;justify-content:space-between;font:500 11px var(--font-mono);color:#fff}
-.vwin__bar{position:absolute;left:22px;right:22px;bottom:20px;height:2px;background:rgba(255,255,255,.35)}
-.vwin__bar i{display:block;height:100%;background:#fff}
 @media(max-width:1100px){.vwin{width:100%;max-width:var(--vwin-w);height:auto;aspect-ratio:16/9}}
+
+/* 5.2b VIDEO CONTROLS — 영상 창 조작. 영상 영역 전체 = 재생/일시정지(.vwin__hit > .vwin__play, 재생 중엔 숨고 hover 시 일시정지 아이콘),
+   오른쪽 위 .vwin__ctrl = 소리(아이콘만, .vwin__btn--icon, 켜지면 .on) + 상세 보기(.vwin__btn--go). 재생 상태는 .vwin.is-playing
+   마크업: .vwin > .im + video.hero-video + .vwin__scrim + button.vwin__hit>.vwin__play>(svg.i-play+svg.i-pause) + .vwin__tags + .vwin__ctrl + .vwin__time */
+.vwin__hit{position:absolute;inset:0;z-index:1;display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
+.vwin__hit:focus{outline:none}
+.vwin__hit:focus-visible .vwin__play{outline:2px solid #fff;outline-offset:3px}
+.vwin__hit .vwin__play{transition:opacity var(--t-card) var(--ease),transform var(--t-card) var(--ease)}
+.vwin__hit:hover .vwin__play{transform:scale(1.06)}
+.vwin.is-playing .vwin__play{opacity:0;transform:scale(.9)}
+.vwin.is-playing .vwin__hit:hover .vwin__play,.vwin.is-playing .vwin__hit:focus-visible .vwin__play{opacity:.85;transform:none}
+.vwin__play svg{width:26px;height:26px;fill:currentColor}
+.vwin__play .i-play{margin-left:3px}
+.vwin__play .i-pause,.vwin.is-playing .vwin__play .i-play{display:none}
+.vwin.is-playing .vwin__play .i-pause{display:block}
+.vwin__tags,.vwin__time{z-index:2;pointer-events:none}
+.vwin__ctrl{position:absolute;right:16px;top:14px;z-index:2;display:flex;gap:8px}
+.vwin__btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-pill);background:rgba(17,17,17,.38);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font:600 12px var(--font-body);letter-spacing:-.01em;transition:background var(--t-base)}
+.vwin__btn:hover{background:rgba(17,17,17,.6)}
+.vwin__btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.vwin__btn--icon{width:36px;padding:0;justify-content:center}
+.vwin__btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vwin__btn svg path:first-child{fill:currentColor;stroke:none}
+.vwin__btn .i-on,.vwin__btn.on .i-off{display:none}
+.vwin__btn.on .i-on{display:block}
+.vwin__btn.on{background:var(--white);color:var(--ink);border-color:var(--white)}
+.vwin__btn--go{background:var(--primary);color:var(--ink);border-color:var(--primary-line)}
+.vwin__btn--go:hover{background:var(--primary-press)}
+@media(max-width:600px){.vwin__ctrl{right:10px;top:10px;gap:6px}.vwin__btn{height:32px;padding:0 11px}.vwin__btn--icon{width:32px;padding:0}.vwin__tags{display:none}}
+@media(hover:none){.vwin__btn:hover{background:rgba(17,17,17,.38)}.vwin__btn--go:hover{background:var(--primary)}.vwin__btn.on:hover{background:var(--white)}}
 
 /* 5.3 COUNTER — 영상·이미지·클립 수. <dl class="stats"><div><dt>라벨</dt><dd>숫자</dd></div>…</dl> */
 .stats{margin:32px 0 0;padding-top:16px;border-top:1px solid var(--ink);display:flex;align-items:flex-end;gap:56px}
@@ -192,6 +223,22 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .prompt--sm{font-size:12px;border-radius:10px}
 .arr--ghost{background:transparent;border-color:#fff}
 .arr--sm{width:44px;height:44px;margin-top:-22px;font-size:20px}
+
+/* 6.10b ACCORDION — 모달의 프롬프트 접기/펼치기. 머리줄 = 토글(라벨 + 꺾쇠) + 복사 버튼, 몸통 = .prompt
+   접힘 .is-clamp: 4줄 미리보기 + 아래 흐림(누르면 펼침), 펼침 .is-open: 실제 높이까지 max-height 애니메이션·꺾쇠 180°. 짧은 프롬프트는 .acc--static(토글 없음)
+   마크업: .acc > .acc__head(button.acc__toggle[aria-expanded] > span + svg.acc__chev, 복사 .pill--primary) + .acc__body > .prompt */
+.acc{margin-top:12px}
+.acc__head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.acc__toggle{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0;border:0;background:none;font-size:14px;color:var(--muted);transition:color var(--t-base)}
+.acc__toggle:hover{color:var(--ink)}
+.acc__chev{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform var(--t-card) var(--ease)}
+.acc.is-open .acc__chev{transform:rotate(180deg)}
+.acc--static .acc__toggle{cursor:default;color:var(--muted)}
+.acc--static .acc__chev{display:none}
+.acc__body{overflow:hidden;transition:max-height var(--t-card) var(--ease)}
+.acc__body .prompt{margin-top:4px;overflow:visible}
+.acc.is-clamp .acc__body{max-height:calc(4 * 22px + 28px);cursor:pointer;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+@media(prefers-reduced-motion:reduce){.acc__body,.acc__chev{transition:none}}
 
 /* 6.11 DETAIL ROW — 라벨 · 값 한 줄. 값이 링크면 밑줄 링크로 표시(출처 영상) */
 .drow{display:flex;justify-content:space-between;padding:6px 0;font-size:15px}
