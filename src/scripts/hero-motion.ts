@@ -41,11 +41,10 @@ export function initHeroMotion() {
     ghost: track.querySelector<HTMLElement>('.hero-ghost'),
     words: [q('w0'), q('w1'), q('w2')],
   };
-  const video = track.querySelector<HTMLVideoElement>('.hero-video');
 
   const rm = matchMedia('(prefers-reduced-motion: reduce)');
   const wide = matchMedia('(min-width:1240px)');
-  let tabbed = false, enabled = false, printing = false, p = 0, raf = 0, visible = true;
+  let tabbed = false, enabled = false, printing = false, p = 0, raf = 0;
 
   const canRun = () => !rm.matches && wide.matches && innerHeight >= 640 && !tabbed && !printing;
   const all = () => [L.eyebrow, L.sub, L.stats, L.vwin, L.info, L.cue, L.ghost, ...L.words].filter(Boolean) as HTMLElement[];
@@ -99,23 +98,12 @@ export function initHeroMotion() {
   }
   const schedule = () => { if (enabled && !raf) raf = requestAnimationFrame(tick); };
 
-  // 대표 영상: 모션이 켜져 있고 화면에 보일 때만 재생(그 외에는 포스터)
-  function syncVideo() {
-    if (!video) return;
-    if (enabled && visible) {
-      if (!video.src) { video.src = video.dataset.src!; video.addEventListener('playing', () => video.classList.add('on'), { once: true }); }
-      video.play().catch(() => {});
-    } else video.pause();
-  }
-  new IntersectionObserver((e) => { visible = e[0].isIntersecting; syncVideo(); }, { threshold: 0.05 }).observe(stage);
-
   function enable() {
     if (enabled) return;
     enabled = true;
     track!.classList.add('is-motion-enabled');
     p = target(); // 중간에서 시작해도(새로고침·뒤로 가기) 튀지 않게 바로 맞춘다
     render();
-    syncVideo();
   }
   function disable() {
     if (!enabled) return;
@@ -123,7 +111,6 @@ export function initHeroMotion() {
     cancelAnimationFrame(raf); raf = 0;
     track!.classList.remove('is-motion-enabled');
     all().forEach((el) => { el.style.transform = ''; el.style.opacity = ''; el.style.boxShadow = ''; el.removeAttribute('inert'); });
-    syncVideo();
   }
   const evaluate = () => (canRun() ? enable() : disable());
 

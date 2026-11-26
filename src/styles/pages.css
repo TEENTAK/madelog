@@ -181,3 +181,28 @@ img,video{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}
 img,video,.media,.tile,.vwin{-webkit-user-select:none;user-select:none}
 .mv-dim{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .mv-dim .prompt,.mv-dim .prompt *{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+
+/* 대표 영상 창 조작(전체 탭 히어로): 영상 영역 = 재생/일시정지, 오른쪽 위 = 소리 켜기 · 상세 보기.
+   design-system.css 5.2 VIDEO WINDOW 에 더하는 규칙(캔버스 반영 전까지 여기 둔다) */
+.vwin__hit{position:absolute;inset:0;z-index:1;display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
+.vwin__hit:focus-visible{outline:2px solid #fff;outline-offset:-6px;border-radius:inherit}
+.vwin__hit .vwin__play{transition:opacity var(--t-card) var(--ease),transform var(--t-card) var(--ease)}
+.vwin__hit:hover .vwin__play{transform:scale(1.06)}
+.vwin.is-playing .vwin__play{opacity:0;transform:scale(.9)}
+.vwin.is-playing .vwin__hit:hover .vwin__play,.vwin.is-playing .vwin__hit:focus-visible .vwin__play{opacity:.85;transform:none}
+.vwin.is-playing .vwin__play::before{content:"❚❚";font-size:16px;letter-spacing:-2px}
+.vwin.is-playing .vwin__play{font-size:0}
+.vwin__tags,.vwin__time{z-index:2;pointer-events:none}
+.vwin__ctrl{position:absolute;right:16px;top:14px;z-index:2;display:flex;gap:8px}
+.vwin__btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-pill);background:rgba(17,17,17,.38);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font:600 12px var(--font-body);letter-spacing:-.01em;transition:background var(--t-base)}
+.vwin__btn:hover{background:rgba(17,17,17,.6)}
+.vwin__btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.vwin__btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vwin__btn svg path:first-child{fill:currentColor;stroke:none}
+.vwin__btn .i-on,.vwin__btn.on .i-off{display:none}
+.vwin__btn.on .i-on{display:block}
+.vwin__btn.on{background:var(--white);color:var(--ink);border-color:var(--white)}
+.vwin__btn--go{background:var(--primary);color:var(--ink);border-color:var(--primary-line)}
+.vwin__btn--go:hover{background:var(--primary-press)}
+@media(max-width:600px){.vwin__ctrl{right:10px;top:10px;gap:6px}.vwin__btn{height:32px;padding:0 11px}.vwin__tags{display:none}}
+@media(hover:none){.vwin__btn:hover{background:rgba(17,17,17,.38)}.vwin__btn--go:hover{background:var(--primary)}.vwin__btn.on:hover{background:var(--white)}}

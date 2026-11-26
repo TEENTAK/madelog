@@ -3,20 +3,15 @@ import { type CollectionEntry } from 'astro:content';
 import { mediaUrl } from '../lib/media';
 import { fmtDate } from '../lib/works';
 
-interface Props { item: CollectionEntry<'images'>; sourceTitle?: string; order?: number; hidden?: boolean }
-const { item, sourceTitle, order = 0, hidden = false } = Astro.props;
+interface Props { item: CollectionEntry<'images'>; order?: number; hidden?: boolean }
+const { item, order = 0, hidden = false } = Astro.props;
 const d = item.data;
 // 빌드 때 --ar = max(원본 가로/세로, 10/21): 너무 긴 이미지는 위쪽 기준으로 잘라 .tile--cut
 const natural = d.width / d.height;
 const ar = Math.max(natural, 10 / 21);
 const cut = natural < 10 / 21;
-const data = {
-  kind: 'image', title: d.title, label: d.tags[0] ?? '', src: mediaUrl(`images/${d.image}`), prompt: (item.body ?? '').trim(),
-  details: [['모델명', d.model], ['품질', d.품질 ?? ''], ['해상도', (d.해상도 ?? `${d.width}x${d.height}`).replace('x', ' × ')], ['비율', d.비율 ?? ''], ['생성일', fmtDate(d.생성일)]],
-  ...(d.from ? { source: { href: `/p/${d.from}`, label: sourceTitle ?? d.from } } : {}),
-};
 ---
-<a class:list={['tile', 'rv', cut && 'tile--cut']} href={`#${item.id}`} data-tile data-id={item.id} data-order={order} data-title={d.title} data-model={d.model} data-tags={d.tags.join('|')} data-res={d.from ? '1' : undefined} hidden={hidden} data-item={JSON.stringify(data)}>
+<a class:list={['tile', 'rv', cut && 'tile--cut']} href={`#${item.id}`} data-tile data-id={item.id} data-order={order} data-title={d.title} data-model={d.model} data-tags={d.tags.join('|')} data-res={d.from ? '1' : undefined} hidden={hidden}>
   <img class="im" src={mediaUrl(`images/${d.image}`)} alt={d.alt ?? d.title} loading="lazy" decoding="async" style={`aspect-ratio:${ar.toFixed(4)};object-fit:cover;object-position:top`} />
   <div class="ov"><b>{d.title}</b><span class="cap">{d.model} · {fmtDate(d.생성일)}</span></div>
 </a>

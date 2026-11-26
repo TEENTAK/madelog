@@ -8,3 +8,4 @@ public/media
 originals/
 .env
 _stage*.zip
+.r2-manifest-*.tsv
