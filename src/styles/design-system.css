@@ -1,6 +1,6 @@
 /* MADE.LOG design system v0.8
    모든 페이지 공통. 색·글꼴·크기·모션 값은 :root 토큰에서만 바꾼다.
-   v0.8(2026-11-26): 태그 글자색(배경 톤의 진한 색)·세로 중앙 보정, 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
+   v0.8(2026-11-26): 태그 글자색(배경 톤의 진한 색)·세로 중앙 보정, 알약형 오른쪽 여백 +1px(시각 보정), 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
    구성: 1 TOKENS · 2 BASE · 3 LAYOUT · 4 NAV · 5 HERO(5.1 Hero · 5.2 Video window · 5.2b Video controls · 5.3 Counter · 5.4 Outline text) · 6 COMPONENTS(6.1 Pill · 6.2 Switch · 6.3 Tag · 6.4 Media · 6.5 Card · 6.6 Rows · 6.6b Vgrid · 6.6c Letterbox · 6.7 Tile · 6.8 Badge · 6.9 Arrow · 6.10 Modal · 6.10b Accordion · 6.11 Detail row · 6.12 Ref · 6.13 Note · 6.14 Skeleton · 6.15 More · 6.16 Primary) · 7 MOTION(7.1 Reveal · 7.2 Hero scroll) · 8 STATE PREVIEW
    새 장르 색 추가: ① --tag-<이름>·--tag-<이름>-ink 토큰(글자색 = 같은 색상 각도, L≈0.45, 배경 대비 6:1 이상) ② .tag--<이름>{--tone:…;--tone-ink:…} 한 줄 */
 
@@ -116,7 +116,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .ol{color:transparent;-webkit-text-stroke:2px var(--ol,var(--ink))}
 
 /* 6. COMPONENTS */
-.pill,.chip{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 16px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--white);color:#474747;font-size:13px;font-weight:600;transition:background var(--t-base),transform var(--t-fast)}
+.pill,.chip{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 17px 0 16px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--white);color:#474747;font-size:13px;font-weight:600;transition:background var(--t-base),transform var(--t-fast)}
 .pill:hover,.chip:hover{background:var(--sf)}
 .pill:active,.chip:active{transform:scale(.96);background:#ebebeb}
 .pill.on,.chip.on{background:var(--ink);border-color:var(--ink);color:var(--white)}
@@ -126,8 +126,9 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .knob::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--white);transition:transform var(--t-base) var(--ease)}
 .sw[aria-checked="true"] .knob{background:var(--ink)}
 .sw[aria-checked="true"] .knob::after{transform:translateX(14px);background:var(--primary)}
-/* 높이 25px: 위 7px·아래 6px. 12px 글자(line-height 1)의 잉크가 위로 0.5~1px 치우치던 것을 보정(1x·2x 화면 실측) */
-.tag{display:inline-flex;align-items:center;padding:7px 9px 6px;border-radius:var(--r-pill);background:var(--tone,var(--sf));font-size:12px;font-weight:700;line-height:1;color:var(--tone-ink,var(--ink))}
+/* 알약형(태그·칩·필) 시각 보정: 한글은 끝 글자의 세로획(ㅁ·ㄴ 등)이 무거워 오른쪽이 좁아 보이므로 오른쪽 여백 +1px.
+   높이 25px: 위 7px·아래 6px. 12px 글자(line-height 1)의 잉크가 위로 0.5~1px 치우치던 것을 보정(1x·2x 화면 실측) */
+.tag{display:inline-flex;align-items:center;padding:7px 10px 6px 9px;border-radius:var(--r-pill);background:var(--tone,var(--sf));font-size:12px;font-weight:700;line-height:1;color:var(--tone-ink,var(--ink))}
 .tag--lime{--tone:var(--tag-lime);--tone-ink:var(--tag-lime-ink)}.tag--lavender{--tone:var(--tag-lavender);--tone-ink:var(--tag-lavender-ink)}.tag--peach{--tone:var(--tag-peach);--tone-ink:var(--tag-peach-ink)}.tag--sky{--tone:var(--tag-sky);--tone-ink:var(--tag-sky-ink)}
 .tag--rose{--tone:var(--tag-rose);--tone-ink:var(--tag-rose-ink)}.tag--mint{--tone:var(--tag-mint);--tone-ink:var(--tag-mint-ink)}.tag--butter{--tone:var(--tag-butter);--tone-ink:var(--tag-butter-ink)}.tag--sand{--tone:var(--tag-sand);--tone-ink:var(--tag-sand-ink)}.tag--periwinkle{--tone:var(--tag-periwinkle);--tone-ink:var(--tag-periwinkle-ink)}
 .tag--model{--tone:var(--sf);--tone-ink:var(--tag-model-ink)}
@@ -272,7 +273,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 
 /* 6.15 MORE — 목록 하단. 더 보기 버튼(.more > .chip, 불러오는 중은 aria-busy="true") · 마지막 도착(.end 구분선) · 실패(.more-note + 다시 시도) */
 .more{display:flex;flex-direction:column;align-items:center;gap:12px;padding:56px 0 8px}
-.more .chip{min-height:52px;padding:0 28px;font-size:14px}
+.more .chip{min-height:52px;padding:0 29px 0 28px;font-size:14px}
 .more .chip small{font:500 12px var(--font-mono);color:var(--caption)}
 .more .chip[aria-busy="true"]{pointer-events:none;color:var(--caption)}
 .more .chip[aria-busy="true"]::before{content:"";width:14px;height:14px;border:2px solid #ccc;border-top-color:var(--ink);border-radius:50%;animation:spin .8s linear infinite}
