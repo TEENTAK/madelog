@@ -33,7 +33,7 @@
 
 ```
 main
- └ .motion-track            height: 300svh (모바일 280svh)
+ └ .motion-track            height: 240svh (모바일 280svh) — 2026-11-26 300에서 줄임
     └ .motion-stage         position: sticky; top: var(--header-h);
                             height: calc(100svh - var(--header-h)); min-height: 560px; overflow: clip
        ├ .hero-eyebrow      ALL WORKS · 102
@@ -76,7 +76,7 @@ p     += (target − p) × 0.12        // 프레임마다
 | 0.1 ~ 0.4 | 카운터 | 아래 +44px, 투명도 1 → 0 (숫자 3개는 40ms 간격) |
 | 0.1 ~ 0.6 | 영상 창 | 크기 변화 없이 왼쪽 −432px(x 496 → 64), 아래 +30px(y 120 → 150). 이동 중 그림자만 강해짐 |
 | 0.5 ~ 0.75 | ghost 글자 | 왼쪽으로 8vw 흐르며 투명도 1 → 0 |
-| 0.62 ~ 0.9 | 작품 정보 | 아래 +65px에서 제자리로, 투명도 0 → 1 |
+| 0.48 ~ 0.8 | 작품 정보 (2026-11-26 0.62~0.9에서 앞당김, 영상 이동 끝과 겹침) | 아래 +65px에서 제자리로, 투명도 0 → 1 |
 | 0.9 ~ 1 | stage 해제 | 일반 스크롤로 Films 섹션 진입 |
 
 ## 7. 진입(로드) 연출

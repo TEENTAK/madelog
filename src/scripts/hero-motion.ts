@@ -40,6 +40,7 @@ export function initHeroMotion() {
     eyebrow: q('eyebrow'), sub: q('sub'), stats: q('stats'), vwin: q('vwin'), info: q('info'), cue: q('cue'),
     ghost: track.querySelector<HTMLElement>('.hero-ghost'),
     words: [q('w0'), q('w1'), q('w2')],
+    go: track.querySelector<HTMLElement>('.vwin__btn--go'),
   };
 
   const rm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -47,7 +48,7 @@ export function initHeroMotion() {
   let tabbed = false, enabled = false, printing = false, p = 0, raf = 0;
 
   const canRun = () => !rm.matches && wide.matches && innerHeight >= 640 && !tabbed && !printing;
-  const all = () => [L.eyebrow, L.sub, L.stats, L.vwin, L.info, L.cue, L.ghost, ...L.words].filter(Boolean) as HTMLElement[];
+  const all = () => [L.eyebrow, L.sub, L.stats, L.vwin, L.info, L.cue, L.ghost, L.go, ...L.words].filter(Boolean) as HTMLElement[];
   const put = (el: HTMLElement | null, tx = 0, ty = 0, rot = 0, op = 1, sc = 1) => {
     if (!el) return;
     el.style.transform = `translate3d(${tx.toFixed(2)}px,${ty.toFixed(2)}px,0)${rot ? ` rotate(${rot.toFixed(2)}deg)` : ''}${sc !== 1 ? ` scale(${sc.toFixed(3)})` : ''}`;
@@ -76,10 +77,13 @@ export function initHeroMotion() {
     const v = smooth(seg(p, 0.1, 0.6));
     put(L.vwin, -COL * v, 30 * v, 0, 1);
     if (L.vwin) L.vwin.style.boxShadow = `0 ${24 + 10 * v}px ${60 + 30 * v}px rgba(0,0,0,${(0.17 + 0.1 * v).toFixed(3)})`;
-    // 0.62 ~ 0.9 작품 정보
-    const i = easeOut(seg(p, 0.62, 0.9));
+    // 0.48 ~ 0.8 작품 정보(영상 이동 끝부분과 겹쳐 빈 구간이 생기지 않게)
+    const i = easeOut(seg(p, 0.48, 0.8));
     put(L.info, 0, 65 * (1 - i), 0, i);
     setInert(L.info, i < 0.5);
+    // 작품 정보의 '작품 보기'와 겹치지 않게 영상 창의 '상세 보기'는 사라진다
+    put(L.go, 0, 0, 0, 1 - i);
+    setInert(L.go, i > 0.5);
   }
 
   function target() {

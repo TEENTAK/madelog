@@ -9,7 +9,7 @@ width: 720
 height: 1280
 references:
   - no: 1
-    name: "storyboard"
+    name: "스토리보드"
     type: "스토리보드"
     tool: "GPT Image 2.0"
     image: "refs/storyboard.webp"

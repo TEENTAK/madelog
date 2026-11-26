@@ -197,6 +197,7 @@ img,video,.media,.tile,.vwin{-webkit-user-select:none;user-select:none}
 .vwin__btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-pill);background:rgba(17,17,17,.38);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font:600 12px var(--font-body);letter-spacing:-.01em;transition:background var(--t-base)}
 .vwin__btn:hover{background:rgba(17,17,17,.6)}
 .vwin__btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.vwin__btn--icon{width:36px;padding:0;justify-content:center}
 .vwin__btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .vwin__btn svg path:first-child{fill:currentColor;stroke:none}
 .vwin__btn .i-on,.vwin__btn.on .i-off{display:none}
@@ -204,5 +205,17 @@ img,video,.media,.tile,.vwin{-webkit-user-select:none;user-select:none}
 .vwin__btn.on{background:var(--white);color:var(--ink);border-color:var(--white)}
 .vwin__btn--go{background:var(--primary);color:var(--ink);border-color:var(--primary-line)}
 .vwin__btn--go:hover{background:var(--primary-press)}
-@media(max-width:600px){.vwin__ctrl{right:10px;top:10px;gap:6px}.vwin__btn{height:32px;padding:0 11px}.vwin__tags{display:none}}
+@media(max-width:600px){.vwin__ctrl{right:10px;top:10px;gap:6px}.vwin__btn{height:32px;padding:0 11px}.vwin__btn--icon{width:32px;padding:0}.vwin__tags{display:none}}
 @media(hover:none){.vwin__btn:hover{background:rgba(17,17,17,.38)}.vwin__btn--go:hover{background:var(--primary)}.vwin__btn.on:hover{background:var(--white)}}
+
+/* 헤더: 스크롤 중 뒤 이미지가 비쳐도 메뉴가 읽히도록 흐림 */
+@supports((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.site-header{background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px)}}
+
+/* 목록 도구줄(모바일): 칩은 한 줄 가로 스크롤, 검색은 남은 폭을 채운다 */
+@media(max-width:600px){
+  .toolbar{gap:12px}
+  .toolbar .chips{flex:1 1 100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;margin:0 calc(var(--gutter) * -1);padding:2px var(--gutter);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .toolbar .chips::-webkit-scrollbar{display:none}
+  .toolbar .tools{flex:1 1 100%;flex-wrap:nowrap}
+  .toolbar .search{flex:1;min-width:0;width:auto}
+}

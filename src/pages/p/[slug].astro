@@ -101,7 +101,7 @@ const clipItems = d.clips.map((c) => ({
             <button type="button" class="refbtn" data-ref={String(ref.no - 1)} aria-haspopup="dialog">
               <div class="sq"><img src={workMedia(work.id, ref.image)} alt={`${ref.name} (${ref.type})`} loading="lazy" decoding="async" /><span class="bd">{ref.no}</span></div>
               <div class="refname">{ref.name}</div>
-              <div class="mono">{ref.type}{ref.비율 ? ` · ${ref.비율}` : ''}</div>
+              <div class="mono">{[!ref.name.includes(ref.type) && ref.type, ref.비율].filter(Boolean).join(' · ')}</div>
             </button>
           ))}
         </div>
@@ -115,7 +115,7 @@ const clipItems = d.clips.map((c) => ({
           <button type="button" class="card card--md clipbtn" data-clip={String(i)} aria-haspopup="dialog">
             <div class="media" style="--ar:1.6"><video data-first={workMedia(work.id, c.video)} preload="none" muted playsinline disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>{c.길이 && <span class="dur">{fmtDur(c.길이)}</span>}</div>
             <h3>{c.title}</h3>
-            <p>{c.해상도 ?? ''}</p>
+            {c.refs?.length ? <p>레퍼런스 {c.refs.length}개</p> : null}
           </button>
         ))}
       </div>

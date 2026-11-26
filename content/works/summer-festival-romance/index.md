@@ -9,7 +9,7 @@ width: 1080
 height: 1920
 references:
   - no: 1
-    name: "keyframe"
+    name: "키프레임"
     type: "키프레임"
     tool: "GPT Image 2.0"
     image: "refs/keyframe.webp"

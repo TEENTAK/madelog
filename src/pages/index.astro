@@ -46,15 +46,13 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
                 <a class="vwin__hit" href={`/p/${featured.id}`} tabindex="-1" aria-hidden="true"><span class="vwin__play">▶</span></a>
               )}
               <div class="vwin__tags">
-                <span class="tag tag--new">{featured.data.featured ? 'FEATURED' : 'LATEST'}</span>
                 {featured.data.model.map((m) => <span class="tag tag--model">{m}</span>)}
               </div>
               <div class="vwin__ctrl">
                 {heroVideo && (
-                  <button type="button" class="vwin__btn" data-hv="sound" aria-pressed="false">
+                  <button type="button" class="vwin__btn vwin__btn--icon" data-hv="sound" aria-pressed="false" aria-label="소리 켜기" title="소리 켜기">
                     <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path d="M17 9l5 6M22 9l-5 6" /></svg>
                     <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" /></svg>
-                    <span data-hv="sound-label">소리 켜기</span>
                   </button>
                 )}
                 <a class="vwin__btn vwin__btn--go" href={`/p/${featured.id}`} aria-label={`${featured.data.title} 상세 보기`}>상세 보기 →</a>
@@ -66,7 +64,6 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
             <div><dt>영상</dt><dd>{works.length}</dd></div>
             <div><dt>이미지</dt><dd>{images.length}</dd></div>
             <div><dt>클립</dt><dd>{clipCount}</dd></div>
-            <a href="/videos" class="more">전체 보기 →</a>
           </dl>
         </div>
       </div>

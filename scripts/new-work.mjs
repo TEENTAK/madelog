@@ -135,13 +135,25 @@ const refTypeOf = (name) =>
   /character|reference ?sheet/i.test(name) ? '캐릭터 시트' :
   /keyframe/i.test(name) ? '키프레임' : '소스 이미지';
 
+// 레퍼런스 표시 이름: part1/keyframe-4a → "Part 1 · 키프레임 4A", storyboard → "스토리보드". md 에서 직접 고쳐도 된다
+const refLabel = (rel) => {
+  const parts = rel.split('/');
+  const base = parts.pop();
+  const part = parts.map((d) => d.replace(/^part[-_ ]?(\d+)$/i, 'Part $1')).join(' · ');
+  const name = base
+    .replace(/^keyframe[-_ ]?(\w*)$/i, (_, n) => `키프레임${n ? ' ' + n.toUpperCase() : ''}`)
+    .replace(/^storyboard[-_ ]?(\w*)$/i, (_, n) => `스토리보드${n ? ' ' + n.toUpperCase() : ''}`)
+    .replace(/^character[-_ ]?(.*)$/i, (_, n) => `캐릭터${n ? ' · ' + n : ''}`);
+  return part ? `${part} · ${name}` : name;
+};
+
 const references = refFiles.map((f, i) => {
   const r = rel(src, f).replace(/\.\w+$/, '.webp');
   skipIfExists(path.join(out, r), () => ff(['-i', f, '-vf', "scale='min(1600,iw)':-2", '-c:v', 'libwebp', '-quality', '85', path.join(out, r)]));
   const p = probe(f);
   return {
     no: i + 1,
-    name: rel(path.join(src, 'refs'), f).replace(/\.\w+$/, ''),
+    name: refLabel(rel(path.join(src, 'refs'), f).replace(/\.\w+$/, '')),
     type: refTypeOf(path.basename(f)),
     image: r,
     해상도: `${p.width}x${p.height}`,

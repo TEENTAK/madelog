@@ -6,7 +6,6 @@ export function initHeroVideo() {
   if (!box || !video) return;
   const toggle = box.querySelector<HTMLButtonElement>('[data-hv="toggle"]')!;
   const sound = box.querySelector<HTMLButtonElement>('[data-hv="sound"]');
-  const soundLabel = box.querySelector<HTMLElement>('[data-hv="sound-label"]');
   const rm = matchMedia('(prefers-reduced-motion: reduce)');
   const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
   let held = rm.matches || saveData; // true = 사용자가 멈췄거나 자동재생을 하지 않는 상태
@@ -21,10 +20,11 @@ export function initHeroVideo() {
     const playing = !video.paused;
     box.classList.toggle('is-playing', playing);
     toggle.setAttribute('aria-label', playing ? '대표 영상 일시정지' : '대표 영상 재생');
-    if (sound && soundLabel) {
+    if (sound) {
+      const label = video.muted ? '소리 켜기' : '소리 끄기';
       sound.setAttribute('aria-pressed', String(!video.muted));
+      sound.setAttribute('aria-label', label); sound.title = label;
       sound.classList.toggle('on', !video.muted);
-      soundLabel.textContent = video.muted ? '소리 켜기' : '소리 끄기';
     }
   };
   const sync = () => {

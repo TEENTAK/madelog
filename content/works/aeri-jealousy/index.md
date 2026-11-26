@@ -9,28 +9,28 @@ width: 720
 height: 1280
 references:
   - no: 1
-    name: "character-aeri"
+    name: "애리"
     type: "캐릭터 시트"
     tool: "GPT Image 2.0"
     image: "refs/character-aeri.webp"
     해상도: "1536x1024"
     비율: "3:2"
   - no: 2
-    name: "character-man"
+    name: "남자"
     type: "캐릭터 시트"
     tool: "GPT Image 2.0"
     image: "refs/character-man.webp"
     해상도: "1536x1024"
     비율: "3:2"
   - no: 3
-    name: "character-woman"
+    name: "여자"
     type: "캐릭터 시트"
     tool: "GPT Image 2.0"
     image: "refs/character-woman.webp"
     해상도: "1536x1024"
     비율: "3:2"
   - no: 4
-    name: "storyboard"
+    name: "스토리보드"
     type: "스토리보드"
     tool: "GPT Image 2.0"
     image: "refs/storyboard.webp"

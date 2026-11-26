@@ -248,7 +248,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 /* 7.2 HERO SCROLL — 큰 track 안에 화면에 붙는 stage(sticky)를 두고 JS가 진행도로 transform·opacity만 바꾼다.
    JS가 시작될 때만 .is-motion-enabled를 붙인다(없으면 일반 흐름 레이아웃). 값은 HERO-MOTION-SPEC.md 참고 */
 .hero-ghost{display:none}
-.motion-track.is-motion-enabled{height:300svh}
+.motion-track.is-motion-enabled{height:240svh}
 .motion-track.is-motion-enabled .motion-stage{position:sticky;top:var(--header-h);height:calc(100svh - var(--header-h));min-height:560px;overflow:clip;isolation:isolate}
 .motion-track.is-motion-enabled .motion-stage>*{position:absolute;will-change:transform,opacity}
 .motion-track.is-motion-enabled .hero-ghost{display:block;left:3%;top:9%;opacity:0;color:transparent;-webkit-text-stroke:1px #11111126;font:800 clamp(150px,19vw,240px)/.77 var(--font-display);letter-spacing:-.07em;white-space:nowrap;pointer-events:none}
