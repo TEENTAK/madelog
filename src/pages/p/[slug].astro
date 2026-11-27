@@ -37,6 +37,8 @@ const readPrompt = (file?: string) => {
   if (!file || !/\.(txt|md)$/i.test(file)) return '';
   try { return fs.readFileSync(path.join(process.cwd(), 'content/works', work.id, 'prompts', file), 'utf8').trim(); } catch { return ''; }
 };
+// 클립 썸네일: new-work 가 clips/<이름>.mp4 옆에 만든 clips/<이름>.webp (영상 첫 프레임, 가로 ≤640)
+const clipThumb = (video: string) => video.replace(/\.\w+$/, '.webp');
 const dim = (v?: string) => (v ?? '').replace('x', ' × ');
 const refItems = refs.map((r) => ({
   kind: 'image', title: r.name, label: r.type, src: workMedia(work.id, r.image), prompt: r.prompt ?? '',
@@ -49,12 +51,12 @@ const clipItems = d.clips.map((c) => ({
 }));
 ---
 <Base title={d.title} description={d.summary || undefined} current="video" image={posterUrl(work)}>
-  <main class="w" style="padding-top:32px;padding-bottom:80px">
+  <main class="w main-detail">
     <a href="/videos" class="mono back">← 작품 목록</a>
 
     <section class="d-head">
       <div>
-        <div class="tags" style="flex-wrap:wrap">
+        <div class="tags">
           <span class="tag tag--type">영상</span>
           {d.model.map((m) => <span class="tag tag--model">{m}</span>)}
           {d.tags.map((t) => <span class={`tag ${tagClass(t)}`}>{t}</span>)}
@@ -74,7 +76,7 @@ const clipItems = d.clips.map((c) => ({
       {sources.length > 1 && (
         <div class="switch" role="group" aria-label="영상 선택">
           {sources.map((s, i) => (
-            <button class="pill" type="button" data-src={s.src} data-ar={s.ar.toFixed(4)} data-label={s.label} aria-pressed={String(i === 0)} class:list={[i === 0 && 'on']}>{s.label}</button>
+            <button class="chip" type="button" data-src={s.src} data-ar={s.ar.toFixed(4)} data-label={s.label} aria-pressed={String(i === 0)} class:list={[i === 0 && 'on']}>{s.label}</button>
           ))}
         </div>
       )}
@@ -113,7 +115,7 @@ const clipItems = d.clips.map((c) => ({
       <div class="g4c">
         {d.clips.map((c, i) => (
           <button type="button" class="card card--md clipbtn" data-clip={String(i)} aria-haspopup="dialog">
-            <div class="media" style="--ar:1.6"><video data-first={workMedia(work.id, c.video)} preload="none" muted playsinline disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>{c.길이 && <span class="dur">{fmtDur(c.길이)}</span>}</div>
+            <div class="media" style="--ar:1.6"><img class="cthumb" src={workMedia(work.id, clipThumb(c.video))} alt="" loading="lazy" decoding="async" />{c.길이 && <span class="dur">{fmtDur(c.길이)}</span>}</div>
             <h3>{c.title}</h3>
             {c.refs?.length ? <p>레퍼런스 {c.refs.length}개</p> : null}
           </button>
@@ -123,7 +125,7 @@ const clipItems = d.clips.map((c) => ({
 
     {(prev || next) && (
       <section class="sec">
-        <nav class="pager" aria-label="이전·다음 작품" style="display:flex;gap:0;font-weight:inherit">
+        <nav class="pager" aria-label="이전·다음 작품">
           {prev ? <a class="pill" href={`/p/${prev.id}`}>← 이전 작품</a> : <span></span>}
           {next ? <a class="pill" href={`/p/${next.id}`}>다음 작품 →</a> : <span></span>}
         </nav>
@@ -155,13 +157,6 @@ const clipItems = d.clips.map((c) => ({
       catch { btn.textContent = '복사하지 못했습니다'; }
       setTimeout(() => (btn.textContent = '공유 링크 복사'), 1800);
     });
-    // ---- 클립 썸네일: 별도 이미지 없이 영상 첫 프레임. 화면 가까이 올 때만 앞부분(메타데이터)을 받는다 ----
-    const firsts = [...document.querySelectorAll<HTMLVideoElement>('video[data-first]')];
-    const loadFirst = (v: HTMLVideoElement) => { if (v.src) return; v.preload = 'metadata'; v.src = `${v.dataset.first}#t=0.1`; };
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { loadFirst(e.target as HTMLVideoElement); io.unobserve(e.target); } }), { rootMargin: '300px 0px' });
-      firsts.forEach((v) => io.observe(v));
-    } else firsts.forEach(loadFirst);
     // ---- 뷰어 (레퍼런스·클립) ----
     import { Layer, type VItem } from '../../scripts/viewer';
     const raw = document.getElementById('mv-data');

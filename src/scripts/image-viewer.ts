@@ -9,7 +9,7 @@ export function bindImageViewer(root: HTMLElement, tiles: () => HTMLElement[], b
   let seq = 0;
   const opts = {
     counter: (a: number, n: number) => `${a} / ${n}`,
-    onNavigate: (i: number) => history.replaceState(history.state, '', `#${list[i].dataset.id}`),
+    onNavigate: (i: number) => { const id = list[i].dataset.id!; history.replaceState(history.state, '', `#${id}`); beforeOpen?.(id); },
     onClose: () => { if (history.state?.mv) history.back(); else { history.replaceState(null, '', location.pathname + location.search); render(); } },
   };
   async function render() {

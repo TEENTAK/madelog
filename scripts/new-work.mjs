@@ -4,7 +4,7 @@
 //
 // 입력 폴더 구조:  clips/(part1/)clip-N.mp4 · refs/(part1/)*.png · prompts/* · final.mp4|mov · _rename-map.tsv
 // 만드는 것:
-//   media-local/works/<슬러그>/  clips/ · refs/*.webp · poster.webp · thumb.webp · preview.mp4 · final.mp4
+//   media-local/works/<슬러그>/  clips/(*.mp4 + 같은 이름 *.webp 썸네일) · refs/*.webp · poster.webp · thumb.webp · preview.mp4 · final.mp4
 //   content/works/<슬러그>/index.md  (이미 있으면 덮어쓰지 않음 — 직접 고친 내용을 지키기 위해. 덮어쓰려면 --force)
 // 필요: ffmpeg, ffprobe (libwebp, libx264 포함)
 
@@ -100,6 +100,8 @@ const clips = clipFiles.map((f) => {
   const r = rel(src, f).replace(/\.mov$/i, '.mp4');
   const target = path.join(out, r);
   skipIfExists(target, () => ff(['-i', f, '-c', 'copy', '-movflags', '+faststart', target]));
+  // 클립 썸네일(상세 페이지 Video Clip 목록): 같은 이름의 .webp, 첫 프레임, 가로 ≤640
+  skipIfExists(target.replace(/\.mp4$/, '.webp'), () => ff(['-ss', '0.1', '-i', f, '-frames:v', '1', '-vf', "scale='min(640,iw)':-2", '-c:v', 'libwebp', '-quality', '80', target.replace(/\.mp4$/, '.webp')]));
   const p = probe(f);
   const part = r.match(/part(\d+)/)?.[1];
   const no = r.match(/clip-(\w+)\.mp4$/)?.[1] ?? '';

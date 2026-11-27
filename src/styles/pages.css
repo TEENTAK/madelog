@@ -1,5 +1,13 @@
 /* 페이지 전용 규칙. 공통 컴포넌트는 design-system.css(v0.8)에 있고, 여기에는 배치만 둔다. */
+/* 모달이 열려 body 스크롤을 막아도 스크롤바 자리가 남아 페이지가 옆으로 밀리지 않게 */
+html{scrollbar-gutter:stable}
 .page{min-height:100svh;display:flex;flex-direction:column}
+/* 페이지 본문 여백(인라인 style 대신) */
+.main-home{padding-top:56px;padding-bottom:80px;display:flex;flex-direction:column;gap:80px}
+.main-detail{padding-top:32px;padding-bottom:80px}
+.main-list{padding-bottom:80px}
+.site-footer .mail{position:relative}
+.site-footer .mail::before{content:"";position:absolute;inset:-14px -6px}
 .page>main{flex:1}
 img.im,img.lb-fg{display:block;object-fit:cover;width:100%}
 img.im{height:100%}
@@ -7,27 +15,27 @@ img.lb-fg{width:auto}
 
 /* 섹션 제목 */
 .sec-h{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
-.sec-h h2{margin:0;font-size:32px;font-weight:700;letter-spacing:-.03em;line-height:1}
+/* 섹션 제목(h2 토큰): 전체 탭 Films·Stills 와 상세 Making·References·Video Clip 이 같은 모양 */
+.sec-h h2,.h2{margin:0;font:var(--fw-h) var(--fs-h2)/1.1 var(--font-display);letter-spacing:-.03em}
 .sec-h a{align-self:center;min-height:var(--tap);display:inline-flex;align-items:center}
 .sec-h .mail{margin-left:auto}
 
 /* 전체 탭 히어로(스크롤 모션 전의 일반 레이아웃) */
 .hero-home .hero-in{display:grid;grid-template-columns:minmax(0,1fr) 720px;gap:56px;align-items:center}
-.hero-home .hero-tx h1{font-size:96px;line-height:1;margin:16px 0 0}
-@media(max-width:1100px){.hero-home .hero-in{grid-template-columns:1fr}.hero-home .hero-tx h1{font-size:72px}}
+.hero-home .hero-tx h1{font-size:var(--fs-display-1);line-height:1;margin:16px 0 0}
+@media(max-width:1100px){.hero-home .hero-in{grid-template-columns:1fr}}
 
 /* 목록 페이지 히어로(영상·이미지) */
 .hero-list .hero-in{background:linear-gradient(90deg,#fff 44%,rgba(255,255,255,.82) 72%,rgba(255,255,255,.15))}
 
 /* 마퀴 */
 .mq{overflow:hidden;border-bottom:1px solid var(--line);padding:22px 0;display:flex;flex-direction:column;gap:6px;background:var(--white)}
-.mq-t{display:flex;width:max-content;font:700 64px/1.1 var(--font-display);letter-spacing:-.03em;white-space:nowrap;animation:mql 36s linear infinite}
+.mq-t{display:flex;width:max-content;font:var(--fw-h) var(--fs-display-2)/1.1 var(--font-display);letter-spacing:-.03em;white-space:nowrap;animation:mql 36s linear infinite}
 .mq-t.r{animation-name:mqr;animation-duration:44s}
 .mq-t span{padding-right:.5em}
-.mq-t .s{color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.mq-t .s{color:var(--white);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}/* 가변 폰트 윤곽 겹침 보정(design-system 5.4와 같은 방식) */
 @keyframes mql{to{transform:translateX(-50%)}}
 @keyframes mqr{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-@media(max-width:600px){.mq-t{font-size:44px}}
 @media(prefers-reduced-motion:reduce){.mq-t{animation:none}}
 
 /* 목록 도구줄(필터·검색·정렬) */
@@ -35,40 +43,46 @@ img.lb-fg{width:auto}
 .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 .chips-sep{width:1px;height:24px;margin:0 4px;background:var(--line);flex:none}
 .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.search{height:44px;width:215px;border:0;border-radius:999px;background:var(--sf);padding:0 15px;font-size:13px}
-.empty{padding:96px 0;text-align:center;color:var(--muted);font-size:15px;line-height:1.8}
-.empty b{display:block;color:var(--ink);font:700 22px var(--font-display);margin-bottom:8px}
+.search{height:var(--btn-sm);width:215px;border:0;border-radius:999px;background:var(--sf);padding:0 14px;font-size:var(--fs-ui)}
+@media(pointer:coarse){.search{height:var(--tap)}}
+@media(max-width:600px){.search{font-size:var(--fs-body)}}/* iOS Safari는 16px 미만 입력창을 누르면 화면을 확대한다 */
+.empty{padding:96px 0;text-align:center;color:var(--muted);font-size:var(--fs-small);line-height:1.8}
+.empty b{display:block;color:var(--ink);font:var(--fw-h) var(--fs-h3) var(--font-display);margin-bottom:8px}
 [hidden]{display:none!important}
 .media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* 작품 상세 */
 .sec{padding-top:80px}
-.h2{margin:0 0 24px;font-size:26px;font-weight:800;letter-spacing:-.03em}
-.back{color:var(--ink2)}
+.sec>.h2{margin-bottom:24px}
+.back{display:inline-flex;align-items:center;min-height:var(--tap);color:var(--muted)}
 .d-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-top:20px}
-.d-head .ttl{margin:16px 0 0;font-size:48px;line-height:1.1;font-weight:800;letter-spacing:-.04em}
-.d-head .sum{margin:14px 0 0;font-size:17px;line-height:1.7;color:var(--ink2);max-width:760px}
+.d-head .ttl{margin:16px 0 0;font-size:var(--fs-h1);line-height:1.15;font-weight:var(--fw-display);letter-spacing:-.04em;text-wrap:balance}
+.d-head .sum{margin:14px 0 0;font-size:var(--fs-body);line-height:1.7;color:var(--muted);max-width:760px;text-wrap:pretty}
+.d-head .tags{flex-wrap:wrap}
 .player{--pw:1000px;position:relative;width:min(100%,var(--pw),calc(76svh*var(--ar)));aspect-ratio:var(--ar);margin:36px auto 0;border-radius:24px;overflow:hidden;background:#0b0b0b}
 .player video{display:block;width:100%;height:100%;background:#0b0b0b}
-.player__label{position:absolute;left:16px;top:16px;background:rgba(0,0,0,.6);color:#fff;font-size:13px;padding:5px 12px;border-radius:999px;pointer-events:none}
+.player__label{position:absolute;left:16px;top:16px;background:rgba(0,0,0,.6);color:#fff;font-size:var(--fs-ui);padding:5px 12px;border-radius:999px;pointer-events:none}
 .switch{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .dstats{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:40px}
 .dstats div{flex:1;padding:20px 0 20px 24px;border-left:1px solid var(--line)}
 .dstats div:first-child{border-left:0;padding-left:0}
-.dstats b{display:block;font-size:24px;font-weight:800;letter-spacing:-.03em}
-.dstats span{font-size:13px;color:var(--ink2)}
+.dstats b{display:block;font-size:var(--fs-h3);font-weight:var(--fw-h);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.dstats span{font-size:var(--fs-ui);color:var(--muted)}
 .making{display:grid;grid-template-columns:240px 1fr;gap:40px}
-.prose{max-width:680px;font-size:16px;line-height:1.85;color:#2a2a2a}
+.prose{max-width:680px;font-size:var(--fs-body);line-height:1.85;color:var(--body);text-wrap:pretty}
 .prose p{margin:0 0 18px}
-.sq{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#e8e8e8}
+.sq{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:var(--sf-2)}
 .sq img{width:100%;height:100%;object-fit:cover;display:block}
 .g4c{display:grid;grid-template-columns:repeat(4,1fr);gap:36px 24px}
 .g6{display:grid;grid-template-columns:repeat(6,1fr);gap:20px 16px}
-.refname{margin-top:8px;font-size:14px;font-weight:600}
-.pager{display:flex;justify-content:space-between;margin-top:48px}
+.refname{margin-top:8px;font-size:var(--fs-small);font-weight:var(--fw-ui)}
+.pager{display:flex;justify-content:space-between;gap:0;margin-top:48px;font-weight:inherit}
 .prompts{display:grid;gap:12px}
 @media(max-width:1000px){.g6{grid-template-columns:repeat(3,1fr)}.g4c{grid-template-columns:repeat(2,1fr)}.making{grid-template-columns:1fr;gap:8px}}
-@media(max-width:700px){.dstats{flex-wrap:wrap}.dstats div{flex:1 1 45%;border-left:0;padding-left:0}.d-head .ttl{font-size:30px}}
+/* 소스 선택(최종본·클립): 모바일은 여러 줄로 쌓지 않고 한 줄 가로 스크롤 */
+@media(max-width:600px){.switch{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;margin:16px calc(var(--gutter) * -1) 0;padding:2px var(--gutter);scrollbar-width:none}.switch::-webkit-scrollbar{display:none}}
+.cthumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+@media(max-width:700px){.dstats{flex-wrap:wrap}.dstats div{flex:1 1 45%;border-left:0;padding-left:0}}
 
 /* 뷰어 모달 (레퍼런스·클립·이미지 공용) */
 .refbtn,.clipbtn{display:block;width:100%;padding:0;border:0;background:none;text-align:left;font:inherit;color:inherit;cursor:pointer}
@@ -90,6 +104,9 @@ img.lb-fg{width:auto}
 .mv-modal .refs .ref{cursor:pointer}
 .mv-modal .prompt{white-space:pre-wrap}
 .mv-arr--l{left:16px}.mv-arr--r{right:16px}
+.mv-modal .arr,.mv-modal .close{display:grid;place-items:center;padding:0}
+.mv-modal .arr svg,.mv-modal .close svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mv-modal .close svg{width:16px;height:16px;stroke-width:2}
 .mv-tags{margin-top:12px}
 .mv-lab{margin-top:20px}
 .mv-details{margin-top:4px}
@@ -100,15 +117,15 @@ img.lb-fg{width:auto}
   .mv-stage{padding:0 16px}
   .mv-modal .arr{top:calc(16px + (42vh - 140px) / 2);width:44px;height:44px;margin-top:-22px}
   .mv-modal .panel{padding:20px 16px 32px}
-  .mv-modal .panel h2{font-size:20px;padding-right:56px}
-  .mv-modal .close{right:12px;top:12px;width:44px;height:44px;font-size:16px}
+  .mv-modal .panel h2{padding-right:56px}
+  .mv-modal .close{right:12px;top:12px}
 }
 
 /* ── 전체 탭 히어로 스크롤 모션 (HERO-MOTION-SPEC.md · 안 E) ──
    기본(JS 없음 · 모션 꺼짐 · 1240px 미만): 일반 히어로. JS가 .is-motion-enabled를 붙일 때만 겹침 배치로 바뀐다. */
 .hero-home .hw{display:block}
 .hero-home .featured-info,.hero-home .hero-cue{display:none}
-.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s,transform var(--t-img) var(--ease)}
 .hero-video.on{opacity:1}
 .vwin:hover .hero-video{transform:scale(var(--zoom))}
 
@@ -163,6 +180,7 @@ img.lb-fg{width:auto}
   .pill:hover,.chip:hover{background:var(--white)}
   .pill.on:hover,.chip.on:hover{background:var(--ink)}
   .pill--primary:hover,.chip--primary:hover{background:var(--primary)}
+  .close:hover{background:var(--white)}
 
   .card,.tile,.vwin{transition:transform var(--t-fast) var(--ease)}
   .card:active,.tile:active{transform:scale(.97)}

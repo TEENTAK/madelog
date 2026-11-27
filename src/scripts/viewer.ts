@@ -20,7 +20,8 @@ export type OpenOpts = {
 
 const stack: Layer[] = [];
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-const OUT_MS = 200; // 닫힘 애니메이션 길이(pages.css .mv-dim 과 같은 값)
+// 닫힘 애니메이션 길이: pages.css .mv-dim 의 transition 값을 읽는다(값을 두 곳에 적지 않게)
+const outMs = (el: HTMLElement) => (parseFloat(getComputedStyle(el).transitionDuration) || 0) * 1000;
 const sync = () => { document.body.style.overflow = stack.length ? 'hidden' : ''; };
 
 export class Layer {
@@ -100,7 +101,7 @@ export class Layer {
     this.root.classList.remove('is-in');
     clearTimeout(this.outTimer);
     if (reduced()) this.root.hidden = true;
-    else this.outTimer = window.setTimeout(() => { if (!this.isOpen) this.root.hidden = true; }, OUT_MS);
+    else this.outTimer = window.setTimeout(() => { if (!this.isOpen) this.root.hidden = true; }, outMs(this.root));
     const k = stack.indexOf(this); if (k >= 0) stack.splice(k, 1); sync();
     if (restoreFocus) this.opener?.focus();
   }
@@ -117,8 +118,8 @@ export class Layer {
       body.style.maxHeight = '';
     } else {
       body.style.maxHeight = `${body.scrollHeight}px`;
-      // 다 열리면 높이 제한을 풀어 창 크기가 바뀌어도 잘리지 않게
-      setTimeout(() => { if (pf.classList.contains('is-open')) body.style.maxHeight = 'none'; }, 360); // --t-card(.3s) 뒤
+      // 다 열리면 높이 제한을 풀어 창 크기가 바뀌어도 잘리지 않게(애니메이션이 끝난 시점 = transitionend)
+      body.addEventListener('transitionend', () => { if (pf.classList.contains('is-open')) body.style.maxHeight = 'none'; }, { once: true });
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) body.style.maxHeight = 'none';
     }
   }

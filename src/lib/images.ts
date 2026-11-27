@@ -12,10 +12,12 @@ export async function getImages(includeResources = false): Promise<ImageWork[]> 
     .sort((a, b) => b.data.생성일.valueOf() - a.data.생성일.valueOf() || a.id.localeCompare(b.id));
 }
 
-// 열 수만큼 라운드로빈으로 나눠 Pinterest식 열을 만든다 (열 높이는 들쭉날쭉 허용)
-export const toColumns = <T>(items: T[], cols = 4): T[][] => {
-  const out: T[][] = Array.from({ length: cols }, () => []);
-  items.forEach((it, i) => out[i % cols].push(it));
+// Pinterest식 열: 순서대로 가장 짧은 열에 넣는다(높이 = 1/비율, 타일 높이 상한 10/21 반영). 열 높이가 고르게 맞는다
+export const tileRatio = (i: ImageWork) => Math.max(i.data.width / i.data.height, 10 / 21);
+export const toColumns = (items: ImageWork[], cols = 4): ImageWork[][] => {
+  const out: ImageWork[][] = Array.from({ length: cols }, () => []);
+  const h = new Array(cols).fill(0);
+  items.forEach((it) => { const k = h.indexOf(Math.min(...h)); out[k].push(it); h[k] += 1 / tileRatio(it); });
   return out;
 };
 

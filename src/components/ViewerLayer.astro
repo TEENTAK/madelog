@@ -10,13 +10,13 @@ const { id } = Astro.props;
         <img data-v="img" alt="" decoding="async" draggable="false" hidden />
         <video data-v="video" controls controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback playsinline preload="metadata" hidden></video>
       </div>
-      <button type="button" class="arr mv-arr--l" data-v="prev" aria-label="이전">‹</button>
-      <button type="button" class="arr mv-arr--r" data-v="next" aria-label="다음">›</button>
+      <button type="button" class="arr mv-arr--l" data-v="prev" aria-label="이전"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+      <button type="button" class="arr mv-arr--r" data-v="next" aria-label="다음"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
       <div class="viewer-strip" data-v="strip"></div>
       <div class="viewer-count" data-v="count"></div>
     </div>
     <div class="panel">
-      <button type="button" class="close" data-v="close" aria-label="닫기">✕</button>
+      <button type="button" class="close" data-v="close" aria-label="닫기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
       <h2 data-v="title" id={`${id}-title`}></h2>
       <div class="tags mv-tags"><span class="tag tag--type" data-v="kind"></span><span class="tag tag--model" data-v="label"></span></div>
       <div data-v="refs-wrap" hidden>
@@ -31,7 +31,7 @@ const { id } = Astro.props;
               <span>생성 프롬프트</span>
               <svg class="acc__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
             </button>
-            <button type="button" class="pill pill--primary" data-v="copy">복사</button>
+            <button type="button" class="chip chip--primary" data-v="copy">복사</button>
           </div>
           <div class="acc__body" id={`${id}-prompt`} data-v="acc-body"><div class="prompt" data-v="prompt"></div></div>
         </div>
