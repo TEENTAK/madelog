@@ -76,7 +76,7 @@ const clipItems = d.clips.map((c) => ({
       {sources.length > 1 && (
         <div class="switch" role="group" aria-label="영상 선택">
           {sources.map((s, i) => (
-            <button class="pill" type="button" data-src={s.src} data-ar={s.ar.toFixed(4)} data-label={s.label} aria-pressed={String(i === 0)} class:list={[i === 0 && 'on']}>{s.label}</button>
+            <button class="chip" type="button" data-src={s.src} data-ar={s.ar.toFixed(4)} data-label={s.label} aria-pressed={String(i === 0)} class:list={[i === 0 && 'on']}>{s.label}</button>
           ))}
         </div>
       )}

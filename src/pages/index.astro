@@ -14,7 +14,7 @@ const clipCount = works.reduce((n, w) => n + w.data.clips.length, 0);
 const featured = pickFeatured(works);
 const fr = featured ? ratioOf(featured) : 16 / 9;
 const letterbox = Math.abs(fr - 16 / 9) > 0.02;
-// 대표 영상: 가로 16:9 완성본만 재생(그 외는 포스터 + 상세 보기)
+// 대표 영상: 가로 16:9 완성본만 재생(그 외는 포스터 + 작품 보기)
 const heroVideo = featured && !letterbox && featured.data.final ? workMedia(featured.id, featured.data.final) : undefined;
 const films = works.slice(0, 6);
 // 전체 탭 이미지: 최신순 12개 + featured 앞에 고정
@@ -55,7 +55,7 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
                     <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" /></svg>
                   </button>
                 )}
-                <a class="vwin__btn vwin__btn--go" href={`/p/${featured.id}`} aria-label={`${featured.data.title} 상세 보기`}>상세 보기 →</a>
+                <a class="vwin__btn vwin__btn--go" href={`/p/${featured.id}`} aria-label={`${featured.data.title} 작품 보기`}>작품 보기 →</a>
               </div>
               <div class="vwin__time" aria-hidden="true"><span>{featured.data.title}</span><span>{fmtDur(cardDuration(featured))}</span></div>
             </div>

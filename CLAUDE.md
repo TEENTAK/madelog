@@ -22,7 +22,7 @@ content/tags.yaml                 태그 사전: 장르 → 색 이름(없는 �
 media-local/                      Git 제외. R2 경로와 같은 구조. public/media 가 이 폴더를 가리킨다
 src/content.config.ts             스키마(Zod). width/height 필수, 극단 비율은 빌드 경고만
 src/lib/media.ts                  미디어 주소는 여기서만 만든다(PUBLIC_MEDIA_BASE_URL, 기본 /media)
-src/styles/design-system.css      디자인 시스템 v0.9 — 캔버스와 같은 파일(캔버스는 이 파일을 업로드해 연결), 고치면 캔버스도 맞춘다
+src/styles/design-system.css      디자인 시스템 v1.0 — 캔버스와 같은 파일(캔버스는 이 파일을 업로드해 연결), 고치면 캔버스도 맞춘다
 src/styles/pages.css              페이지 전용 배치 규칙
 src/pages/                        / (전체) · /videos · /images · /p/<슬러그>
 src/scripts/                      viewer.ts(공유 뷰어 모달) · hero-motion.ts(전체 탭 히어로) · image-list.ts(이미지 12개씩·필터)
@@ -38,7 +38,9 @@ scripts/sync-notion.mjs           Notion 동기화
 
 ## 확정된 결정
 - 헤더 메뉴: 전체 / 영상 / 이미지. 푸터 이메일 teentak@gmail.com, 마퀴 모델명은 버전 없는 대표명만(`src/site.ts`: VEO, OMNI FLASH / GPT IMAGE, NANO BANANA). 작품 데이터 `model`에는 실제 버전을 적는다. About 페이지·이메일 수집·로그인·관리자 화면·다국어는 만들지 않는다.
-- 디자인: 화이트·그레이·블랙, 포인트 컬러는 #e4f222, 포인트 위 가는 선은 `--primary-line`(#bcc631, 1px: 로고·eyebrow 점, 주 버튼 보더). 모델 태그와 장르 태그는 같은 폰트. 폰트 Pretendard / Inter Tight / Geist Mono. 태그는 파스텔.
+- 디자인: 화이트·그레이·블랙, 포인트 컬러는 #e4f222, 포인트 위 가는 선은 `--primary-line`(#bcc631, 1px: 로고·eyebrow 점만. **주 버튼은 보더 없이 라임 면만**). 모델 태그와 장르 태그는 같은 폰트. 폰트 Pretendard / Inter Tight / Geist Mono. 태그는 파스텔.
+- 위계 토큰(v1.0, 2026-11-27): 글자 9단계 — 작은 글자 4개 고정(caption 12·ui 13·small 14·body 16), 제목·디스플레이 5개는 390→1240px에서 clamp로 자동 변화(h3 20→24·h2 24→32·h1 32→48·display-2 40→64·display-1 56→112). 굵기 600/700/800. 회색은 ink·body·muted / sf·sf-2 / line·line-strong. 새 규칙에는 px 대신 이 토큰을 쓴다(히어로 모션 전용 크기는 명세값 유지).
+- 버튼 = 알약(radius 999), 태그 = 각진 라벨(`--r-tag` 6px, 높이 22, 누를 수 없음). 버튼 높이: `.chip` sm 32(필터·정렬·검색·복사·영상 창 버튼) · `.pill` md 40(보조·닫기 원형) · `.pill--primary`·더 보기 lg 48. 터치 기기(pointer:coarse)는 모두 44. 영상 창과 작품 정보의 CTA 이름은 "작품 보기"로 통일.
 - 영상 리스트는 줄맞춤(`.gal`), 한 번에 **8개씩** 더 보기(검색·정렬·장르 모두 주소에 반영). 전체 탭은 고정 3열 그리드(`.vgrid`, 16:9 상자 + 블러 여백). 이미지는 Pinterest식 masonry, 12개씩(첫 로드 후 한 번 자동, 이후 "더 보기" 버튼, 스켈레톤), 모델별 필터 칩, 리소스 포함 토글(리소스가 있을 때만 표시). 개수는 `src/site.ts`의 `PAGE_SIZE` 한 곳에서 정한다. masonry 열은 "가장 짧은 열에 넣기"(서버 `toColumns`·클라이언트 `image-list.ts` 같은 규칙). 이미지 모달은 필터에 맞는 전체 목록을 넘기고, 열리지 않은 묶음으로 가면 그 묶음까지 연다.
 - 전체 탭은 최신순 자동(영상 6·이미지 12) + `featured: true`는 앞에 고정. 필터는 주소(`?genre=`)에 반영, 검색은 제목·태그만.
 - **NEW 태그는 쓰지 않는다**(삭제). 히어로의 `LATEST`/`FEATURED` 표시만 남긴다.

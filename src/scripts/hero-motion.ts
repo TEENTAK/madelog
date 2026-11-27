@@ -87,7 +87,7 @@ export function initHeroMotion() {
     const i = easeOut(seg(p, 0.48, 0.8));
     put(L.info, 0, 65 * (1 - i), 0, i);
     setInert(L.info, i < 0.5);
-    // 작품 정보의 '작품 보기'와 겹치지 않게 영상 창의 '상세 보기'는 사라진다
+    // 작품 정보의 '작품 보기' 버튼이 나타나면 같은 이름의 영상 창 버튼은 사라진다(같은 행동이 두 개 보이지 않게)
     put(L.go, 0, 0, 0, 1 - i);
     setInert(L.go, i > 0.5);
   }
