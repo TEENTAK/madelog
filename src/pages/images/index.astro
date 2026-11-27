@@ -4,7 +4,9 @@ import ImageTile from '../../components/ImageTile.astro';
 import ViewerLayer from '../../components/ViewerLayer.astro';
 import { getImages, toColumns } from '../../lib/images';
 
-const PAGE = 12; // 한 번에 보여 주는 개수 (scripts/image-list.ts 와 같은 값)
+import { PAGE_SIZE } from '../../site';
+
+const PAGE = PAGE_SIZE.image;
 const images = await getImages(true); // 영상 리소스(from)까지 모두 싣고, 보이는 것은 아래에서 고른다
 const solo = images.filter((i) => !i.data.from);
 const resources = images.filter((i) => i.data.from);
@@ -43,7 +45,7 @@ const cols = toColumns([...solo, ...resources], 4);
       <button class="chip" data-sort>최신순 ↓</button>
     </div>
   </section>
-  <main class="w" style="padding-bottom:80px">
+  <main class="w main-list">
     {images.length ? (
       <>
         <div class="masonry" data-masonry>{cols.map((col) => <div class="mc">{col.map((i) => <ImageTile item={i} order={images.indexOf(i)} hidden={!shownIds.has(i.id)} />)}</div>)}</div>
@@ -62,9 +64,9 @@ const cols = toColumns([...solo, ...resources], 4);
     import { initImageList } from '../../scripts/image-list';
     const list0 = initImageList();
     const root = document.getElementById('mv-1');
-    // 이동 순서 = 지금 보이는(필터·정렬된) 타일 순서. 열로 나뉜 화면 순서가 아니라 목록 순서(data-order)
+    // 이동 순서 = 필터·정렬에 맞는 전체 목록 순서(아직 열지 않은 묶음 포함). 넘어가면 그 타일이 있는 묶음까지 연다
     if (root) bindImageViewer(root,
-      () => [...document.querySelectorAll<HTMLElement>('[data-tile]')].filter((t) => !t.hidden && !t.closest('[hidden]')).sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order)),
+      () => list0?.ordered() ?? [...document.querySelectorAll<HTMLElement>('[data-tile]')].sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order)),
       (id) => list0?.ensureVisible(id));
   </script>
 </Base>

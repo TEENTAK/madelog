@@ -10,8 +10,12 @@ const d = item.data;
 const natural = d.width / d.height;
 const ar = Math.max(natural, 10 / 21);
 const cut = natural < 10 / 21;
+// 목록 타일은 작은 사본(-sm.webp, 가로 640 · scripts/thumbs.mjs)을 먼저 쓰고, 원본은 고해상도 화면에서만 고른다
+const full = mediaUrl(`images/${d.image}`);
+const sm = /\.webp$/.test(d.image) ? mediaUrl(`images/${d.image.replace(/\.webp$/, '-sm.webp')}`) : full;
+const srcset = sm !== full ? `${sm} ${Math.min(640, d.width)}w, ${full} ${d.width}w` : undefined;
 ---
-<a class:list={['tile', 'rv', cut && 'tile--cut']} href={`#${item.id}`} data-tile data-id={item.id} data-order={order} data-title={d.title} data-model={d.model} data-tags={d.tags.join('|')} data-res={d.from ? '1' : undefined} hidden={hidden}>
-  <img class="im" src={mediaUrl(`images/${d.image}`)} alt={d.alt ?? d.title} loading="lazy" decoding="async" style={`aspect-ratio:${ar.toFixed(4)};object-fit:cover;object-position:top`} />
+<a class:list={['tile', 'rv', cut && 'tile--cut']} href={`#${item.id}`} data-tile data-id={item.id} data-order={order} data-title={d.title} data-model={d.model} data-tags={d.tags.join('|')} data-res={d.from ? '1' : undefined} data-ar={ar.toFixed(4)} hidden={hidden}>
+  <img class="im" src={sm} srcset={srcset} sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 290px" alt={d.alt ?? d.title} loading="lazy" decoding="async" style={`aspect-ratio:${ar.toFixed(4)};object-fit:cover;object-position:top`} />
   <div class="ov"><b>{d.title}</b><span class="cap">{d.model} · {fmtDate(d.생성일)}</span></div>
 </a>

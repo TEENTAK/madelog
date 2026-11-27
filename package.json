@@ -11,6 +11,7 @@
     "new-work": "node scripts/new-work.mjs",
     "deploy": "astro build && rm -rf dist/media && npx wrangler deploy",
     "upload-media": "node scripts/upload-media.mjs",
+    "thumbs": "node scripts/thumbs.mjs",
     "sync-notion": "node --env-file=.env scripts/sync-notion.mjs"
   },
   "dependencies": {

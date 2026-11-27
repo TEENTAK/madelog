@@ -88,7 +88,7 @@ const repeat = (items: string[]) => [...items, ...items, ...items, ...items];
     <div class="mq-t r">{repeat(site.models.image).map((m, i) => <span class={i % 2 ? 's' : undefined}>{m}</span>)}</div>
   </div>
 
-  <main class="w" style="padding-top:56px;padding-bottom:80px;display:flex;flex-direction:column;gap:80px">
+  <main class="w main-home">
     <section aria-label="최근 영상">
       <div class="sec-h"><h2 class="disp">Films</h2><span class="mono">영상 · {works.length}</span><a class="mail" href="/videos">영상 전체 보기 →</a></div>
       {films.length ? (

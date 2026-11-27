@@ -9,7 +9,6 @@ const WORDS = [
   { x: -44, y: 36, r: 3 },
   { x: -96, y: 70, r: -6 },
 ];
-const COL = 432; // CSS --col-w 와 같은 값(영상 창이 왼쪽 열 폭만큼 이동)
 
 // 카운터: 첫 로딩 때 0부터 채운다(모션 줄이기 설정이면 최종값 그대로)
 function countUp() {
@@ -46,6 +45,13 @@ export function initHeroMotion() {
   const rm = matchMedia('(prefers-reduced-motion: reduce)');
   const wide = matchMedia('(min-width:1240px)');
   let tabbed = false, enabled = false, printing = false, p = 0, raf = 0;
+  // 영상 창 이동 거리(CSS --col-w)와 stage 의 sticky top 은 켤 때·창 크기가 바뀔 때만 읽는다(프레임마다 스타일 계산 X)
+  let col = 432, stageTop = 0;
+  const measure = () => {
+    const cs = getComputedStyle(track!);
+    col = parseFloat(cs.getPropertyValue('--col-w')) || 432;
+    stageTop = parseFloat(getComputedStyle(stage!).top) || 0;
+  };
 
   const canRun = () => !rm.matches && wide.matches && innerHeight >= 640 && !tabbed && !printing;
   const all = () => [L.eyebrow, L.sub, L.stats, L.vwin, L.info, L.cue, L.ghost, L.go, ...L.words].filter(Boolean) as HTMLElement[];
@@ -75,7 +81,7 @@ export function initHeroMotion() {
     setInert(L.stats, s > 0.5);
     // 0.1 ~ 0.6 영상 창: 크기 그대로, 이동만(그림자만 강해짐)
     const v = smooth(seg(p, 0.1, 0.6));
-    put(L.vwin, -COL * v, 30 * v, 0, 1);
+    put(L.vwin, -col * v, 30 * v, 0, 1);
     if (L.vwin) L.vwin.style.boxShadow = `0 ${24 + 10 * v}px ${60 + 30 * v}px rgba(0,0,0,${(0.17 + 0.1 * v).toFixed(3)})`;
     // 0.48 ~ 0.8 작품 정보(영상 이동 끝부분과 겹쳐 빈 구간이 생기지 않게)
     const i = easeOut(seg(p, 0.48, 0.8));
@@ -87,8 +93,7 @@ export function initHeroMotion() {
   }
 
   function target() {
-    const top = parseFloat(getComputedStyle(stage!).top) || 0;
-    const raw = (top - track!.getBoundingClientRect().top) / Math.max(1, track!.offsetHeight - stage!.offsetHeight);
+    const raw = (stageTop - track!.getBoundingClientRect().top) / Math.max(1, track!.offsetHeight - stage!.offsetHeight);
     return clamp(raw / 0.9);
   }
   function tick() {
@@ -106,6 +111,7 @@ export function initHeroMotion() {
     if (enabled) return;
     enabled = true;
     track!.classList.add('is-motion-enabled');
+    measure();
     p = target(); // 중간에서 시작해도(새로고침·뒤로 가기) 튀지 않게 바로 맞춘다
     render();
   }
@@ -119,7 +125,7 @@ export function initHeroMotion() {
   const evaluate = () => (canRun() ? enable() : disable());
 
   addEventListener('scroll', schedule, { passive: true });
-  addEventListener('resize', () => { evaluate(); if (enabled) { p = target(); render(); } }, { passive: true });
+  addEventListener('resize', () => { evaluate(); if (enabled) { measure(); p = target(); render(); } }, { passive: true });
   addEventListener('keydown', (e) => { if (e.key === 'Tab' && !tabbed) { tabbed = true; evaluate(); } });
   addEventListener('beforeprint', () => { printing = true; evaluate(); });
   addEventListener('afterprint', () => { printing = false; evaluate(); });

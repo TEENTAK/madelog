@@ -9,3 +9,6 @@ export const site = {
     image: ['GPT IMAGE', 'NANO BANANA'],
   },
 };
+
+// 목록에서 한 번에 여는 개수. 페이지(.astro)와 스크립트가 이 값을 같이 쓴다
+export const PAGE_SIZE = { video: 8, image: 12 } as const;

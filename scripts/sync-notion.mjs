@@ -116,6 +116,8 @@ for (const row of rows) {
     fs.writeFileSync(path.join(ORIG, `${id}${ext}`), buf);
     const { data, info } = await sharp(buf, { failOn: 'none' }).rotate().resize({ width: 2048, height: 2048, fit: 'inside', withoutEnlargement: true }).webp({ quality: 86 }).toBuffer({ resolveWithObject: true });
     fs.writeFileSync(path.join(MEDIA, `${id}.webp`), data);
+    // 목록 타일용 작은 사본(가로 640). 원본 크기는 모달에서만 받는다(ImageTile.astro srcset)
+    fs.writeFileSync(path.join(MEDIA, `${id}-sm.webp`), await sharp(data).resize({ width: 640, withoutEnlargement: true }).webp({ quality: 80 }).toBuffer());
 
     const file = path.join(CONTENT, `${id}.md`);
     let fm = {

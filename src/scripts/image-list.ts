@@ -1,6 +1,7 @@
 // 이미지 목록: 12개씩 열기(처음 한 번은 자동, 이후 "더 보기"), 모델·태그 필터, 검색(제목·태그), 정렬, 영상 리소스 포함 스위치.
 // 타일은 모두 HTML에 들어 있고 hidden 으로 숨겨져 있다. 보이는 묶음이 바뀔 때마다 열 4개에 순서대로 다시 나눠 담는다.
-const PAGE = 12; // pages/images/index.astro 의 PAGE 와 같은 값
+import { PAGE_SIZE } from '../site';
+const PAGE = PAGE_SIZE.image;
 
 export function initImageList() {
   const masonry = document.querySelector<HTMLElement>('[data-masonry]');
@@ -57,7 +58,9 @@ export function initImageList() {
     syncUrl();
     const vis = matching().slice(0, shown);
     tiles.forEach((t) => { t.hidden = true; });
-    vis.forEach((t, i) => { t.hidden = false; cols[i % cols.length].appendChild(t); });
+    // 순서대로 가장 짧은 열에 넣는다(높이 = 1/비율). lib/images.ts toColumns 와 같은 규칙
+    const h = cols.map(() => 0);
+    vis.forEach((t) => { const k = h.indexOf(Math.min(...h)); t.hidden = false; cols[k].appendChild(t); h[k] += 1 / (Number(t.dataset.ar) || 1); });
     setState();
   }
 
@@ -158,6 +161,8 @@ export function initImageList() {
   layout(); watch(matching().slice(0, shown));
 
   return {
+    // 모달의 이전·다음 순서: 지금 필터·정렬에 맞는 전체 타일(아직 열지 않은 묶음 포함)
+    ordered: () => matching(),
     // 주소의 #id 타일이 닫힌 묶음·다른 필터·리소스 꺼짐 상태에 있으면 보이게 연다
     ensureVisible(id: string) {
       const t = tiles.find((x) => x.dataset.id === id); if (!t) return;

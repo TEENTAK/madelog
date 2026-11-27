@@ -1,6 +1,6 @@
-/* MADE.LOG design system v0.8
+/* MADE.LOG design system v0.9
    모든 페이지 공통. 색·글꼴·크기·모션 값은 :root 토큰에서만 바꾼다.
-   v0.8(2026-11-26): 태그 글자색(배경 톤의 진한 색)·세로 중앙 보정, 알약형 오른쪽 여백 +1px(시각 보정), 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
+   v0.9(2026-11-27): 숫자 고정폭(카운터)·윤곽선 글자 겹침 보정(paint-order)·한글 줄바꿈(keep-all)·미디어 윤곽선·영상 창 버튼 터치 영역 44px. v0.8(2026-11-26): 태그 글자색(배경 톤의 진한 색)·세로 중앙 보정, 알약형 오른쪽 여백 +1px(시각 보정), 헤더 흐림, 영상 창 조작(5.2b), 프롬프트 아코디언(6.10b), 히어로 스크롤 트랙 240svh
    구성: 1 TOKENS · 2 BASE · 3 LAYOUT · 4 NAV · 5 HERO(5.1 Hero · 5.2 Video window · 5.2b Video controls · 5.3 Counter · 5.4 Outline text) · 6 COMPONENTS(6.1 Pill · 6.2 Switch · 6.3 Tag · 6.4 Media · 6.5 Card · 6.6 Rows · 6.6b Vgrid · 6.6c Letterbox · 6.7 Tile · 6.8 Badge · 6.9 Arrow · 6.10 Modal · 6.10b Accordion · 6.11 Detail row · 6.12 Ref · 6.13 Note · 6.14 Skeleton · 6.15 More · 6.16 Primary) · 7 MOTION(7.1 Reveal · 7.2 Hero scroll) · 8 STATE PREVIEW
    새 장르 색 추가: ① --tag-<이름>·--tag-<이름>-ink 토큰(글자색 = 같은 색상 각도, L≈0.45, 배경 대비 6:1 이상) ② .tag--<이름>{--tone:…;--tone-ink:…} 한 줄 */
 
@@ -27,7 +27,7 @@
 
 /* 2. BASE */
 *{box-sizing:border-box}
-body{margin:0;color:var(--ink);font-family:var(--font-body);letter-spacing:-.025em;-webkit-font-smoothing:antialiased;background:var(--white)}
+body{margin:0;color:var(--ink);font-family:var(--font-body);letter-spacing:-.025em;-webkit-font-smoothing:antialiased;background:var(--white);word-break:keep-all;overflow-wrap:break-word}
 a{color:inherit;text-decoration:none}
 button,input{font:inherit}
 button{cursor:pointer;color:inherit}
@@ -92,6 +92,8 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .vwin__tags,.vwin__time{z-index:2;pointer-events:none}
 .vwin__ctrl{position:absolute;right:16px;top:14px;z-index:2;display:flex;gap:8px}
 .vwin__btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-pill);background:rgba(17,17,17,.38);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font:600 12px var(--font-body);letter-spacing:-.01em;transition:background var(--t-base)}
+.vwin__btn{position:relative}
+.vwin__btn::before{content:"";position:absolute;inset:-4px}/* 터치 영역 44px(보이는 크기 36px) */
 .vwin__btn:hover{background:rgba(17,17,17,.6)}
 .vwin__btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .vwin__btn--icon{width:36px;padding:0;justify-content:center}
@@ -102,18 +104,19 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .vwin__btn.on{background:var(--white);color:var(--ink);border-color:var(--white)}
 .vwin__btn--go{background:var(--primary);color:var(--ink);border-color:var(--primary-line)}
 .vwin__btn--go:hover{background:var(--primary-press)}
-@media(max-width:600px){.vwin__ctrl{right:10px;top:10px;gap:6px}.vwin__btn{height:32px;padding:0 11px}.vwin__btn--icon{width:32px;padding:0}.vwin__tags{display:none}}
+@media(max-width:600px){.vwin__ctrl{right:10px;top:10px;gap:12px}.vwin__btn::before{inset:-6px}.vwin__btn{height:32px;padding:0 11px}.vwin__btn--icon{width:32px;padding:0}.vwin__tags{display:none}}
 @media(hover:none){.vwin__btn:hover{background:rgba(17,17,17,.38)}.vwin__btn--go:hover{background:var(--primary)}.vwin__btn.on:hover{background:var(--white)}}
 
 /* 5.3 COUNTER — 영상·이미지·클립 수. <dl class="stats"><div><dt>라벨</dt><dd>숫자</dd></div>…</dl> */
 .stats{margin:32px 0 0;padding-top:16px;border-top:1px solid var(--ink);display:flex;align-items:flex-end;gap:56px}
 .stats>div{display:flex;flex-direction:column-reverse;gap:8px}
-.stats dd{margin:0;font:700 32px/1 var(--font-display);letter-spacing:-.02em}
+.stats dd{margin:0;font:700 32px/1 var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .stats dt{font:500 11px/1 var(--font-mono);letter-spacing:.06em;color:var(--caption)}
 .stats .more{margin-left:auto;font:500 12px var(--font-mono);color:var(--ink)}
 
-/* 5.4 OUTLINE TEXT — 윤곽선 글자. 흰 바탕 위 기본은 INK, 어두운 바탕에서는 --ol로 색을 바꾼다 */
-.ol{color:transparent;-webkit-text-stroke:2px var(--ol,var(--ink))}
+/* 5.4 OUTLINE TEXT — 윤곽선 글자. 흰 바탕 위 기본은 INK, 어두운 바탕에서는 --ol(선)·--ol-bg(속)로 색을 바꾼다.
+   가변 폰트는 글자 윤곽이 겹쳐 있어(e의 가로획 등) 가운데 선을 그리면 안쪽에 선이 비친다. 선을 두 배 굵기로 먼저 칠하고(paint-order) 속을 바탕색으로 덮어 바깥 2px만 남긴다 */
+.ol{color:var(--ol-bg,var(--white));-webkit-text-stroke:4px var(--ol,var(--ink));paint-order:stroke fill}
 
 /* 6. COMPONENTS */
 .pill,.chip{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 17px 0 16px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--white);color:#474747;font-size:13px;font-weight:600;transition:background var(--t-base),transform var(--t-fast)}
@@ -141,6 +144,8 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 
 /* 6.4 MEDIA — 썸네일. 비율은 --ar(가로/세로)로 지정, hover 시 이미지 확대와 채도 복원 */
 .media{flex:none;position:relative;overflow:hidden;border-radius:var(--r-media,var(--r-card));aspect-ratio:var(--ar,16/9)}
+/* 미디어 윤곽선: 밝은 이미지가 흰 바탕에 묻히지 않게 안쪽 1px(순흑 10%) */
+.media::after,.tile::before{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;box-shadow:inset 0 0 0 1px oklch(0 0 0/.1);pointer-events:none}
 .im{position:absolute;inset:0;filter:saturate(.88) contrast(1.05);transition:transform var(--t-img) var(--ease),filter var(--t-img) var(--ease)}
 .dur{position:absolute;right:10px;bottom:10px;padding:3px 9px;border-radius:var(--r-pill);background:rgba(0,0,0,.75);color:#fff;font:500 12px var(--font-mono)}
 
@@ -150,7 +155,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .card:active{transform:translateY(var(--lift-press))}
 .card:hover .im,.tile:hover .im{transform:scale(var(--zoom));filter:saturate(1) contrast(1.05)}
 .card:active .im,.tile:active .im{transform:scale(var(--zoom-press));transition-duration:var(--t-fast)}
-.card h2,.card h3{margin:12px 0 0;font-size:var(--title,17px);line-height:1.3;font-weight:700;letter-spacing:-.04em}
+.card h2,.card h3{margin:12px 0 0;font-size:var(--title,17px);line-height:1.3;font-weight:700;letter-spacing:-.04em;text-wrap:balance}
 .card p{margin:4px 0 0;font-size:13px;color:var(--muted)}
 .card .date{display:block;margin-top:6px}
 .card .dt{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:auto;padding-top:12px}
@@ -212,7 +217,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .strip-btn{width:72px;height:44px;border:1px solid #888;border-radius:6px;background:#3a3a3a;color:#ddd;font-size:12px}
 .strip-btn[aria-current="true"]{border:2px solid #fff}
 .panel{position:relative;display:flex;flex-direction:column;min-height:0;padding:28px;overflow:auto}
-.panel h2{margin:0;padding-right:64px;font-size:24px}
+.panel h2{margin:0;padding-right:64px;font-size:24px;text-wrap:balance}
 .panel--sm{flex:1;padding:20px 16px 32px}
 .panel--sm h2{padding-right:0;font-size:20px}
 .panel--sm .lab{font-size:13px}

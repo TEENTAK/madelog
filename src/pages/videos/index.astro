@@ -27,7 +27,7 @@ const tags = [...new Set(works.flatMap((w) => w.data.tags))];
         <button class="chip" data-sort>최신순 ↓</button>
       </div>
     </section>
-    <main class="w" style="padding-bottom:80px">
+    <main class="w main-list">
       <section class="gal" data-grid aria-label="영상 작품 목록">
         {works.map((w, i) => <VideoCard work={w} variant="row" eager={i < 8} />)}
       </section>

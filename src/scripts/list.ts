@@ -1,7 +1,8 @@
 import { bindPreview } from './preview';
+import { PAGE_SIZE } from '../site';
 
 // 영상 리스트: 데이터는 이미 페이지에 있고(서버 요청 없음), "몇 개씩 그릴지"만 다룬다.
-const PAGE = 8;
+const PAGE = PAGE_SIZE.video;
 
 const root = document.querySelector<HTMLElement>('[data-list]');
 if (root) {
@@ -15,13 +16,23 @@ if (root) {
   const search = root.querySelector<HTMLInputElement>('[data-search]')!;
   const sortBtn = root.querySelector<HTMLButtonElement>('[data-sort]')!;
 
+  // 장르·검색·정렬은 주소에 남긴다(?genre=&q=&sort=old). 이미지 목록과 같은 방식. 모르는 장르 값은 무시
   const params = new URLSearchParams(location.search);
-  let tag = params.get('genre') ?? '';
-  let q = '';
-  let desc = true;
+  const g = params.get('genre') ?? '';
+  let tag = chips.some((c) => c.dataset.chip === g) ? g : '';
+  let q = params.get('q') ?? '';
+  let desc = params.get('sort') !== 'old';
   let shown = PAGE;
+  search.value = q;
+  const syncUrl = () => {
+    const u = new URL(location.href);
+    const set = (k: string, v: string) => (v ? u.searchParams.set(k, v) : u.searchParams.delete(k));
+    set('genre', tag); set('q', q.trim()); set('sort', desc ? '' : 'old');
+    if (u.href !== location.href) history.replaceState(history.state, '', u);
+  };
 
   const render = () => {
+    syncUrl();
     const needle = q.trim().toLowerCase();
     const match = (c: HTMLElement) =>
       (!tag || (c.dataset.tags ?? '').split('|').includes(tag)) &&
@@ -47,9 +58,6 @@ if (root) {
   const reset = () => { shown = PAGE; render(); };
   chips.forEach((b) => b.addEventListener('click', () => {
     tag = b.dataset.chip ?? '';
-    const u = new URL(location.href);
-    tag ? u.searchParams.set('genre', tag) : u.searchParams.delete('genre');
-    history.replaceState(null, '', u);
     reset();
   }));
   search.addEventListener('input', () => { q = search.value; reset(); });
@@ -58,7 +66,6 @@ if (root) {
   // 결과 없음 → 장르·검색 초기화
   root.querySelector('[data-reset]')?.addEventListener('click', () => {
     tag = ''; q = ''; search.value = '';
-    const u = new URL(location.href); u.searchParams.delete('genre'); history.replaceState(null, '', u);
     reset(); search.focus();
   });
   render();

@@ -3,9 +3,11 @@
 개인 AI 이미지·영상 작업물 아카이브 사이트. **프롬프트를 공유하는 사이트가 아니라 본인 작업물을 보관·전시하는 용도**라서 프롬프트는 있을 때만 보여 주는 선택 정보다. Astro 7 정적 사이트, 한국어 UI.
 
 ## 환경과 명령
-- Mac, **Node 22.23.4 이상 필요**(Astro 7.4.13). 낮으면 먼저 Node를 올린다. 영상·이미지 처리에는 ffmpeg/ffprobe(libwebp, libx264)가 필요하다.
+- Mac, **Node 22.23.4 이상 필요**(Astro 7.4.13). 낮으면 먼저 Node를 올린다. 영상·이미지 처리에는 ffmpeg/ffprobe(libwebp, libx264)가 필요하다. 2026-11-27 기준 설치된 ffmpeg에 libwebp가 없다(`thumbs.mjs`는 PNG→sharp로 우회, `new-work`의 poster·thumb·refs 변환은 libwebp 있는 ffmpeg가 필요).
+- Python Playwright(webapp-testing 스킬용)는 `~/.venvs/playwright`에 있다(`~/.venvs/playwright/bin/python`). Homebrew Python은 전역 pip 설치를 막는다(PEP 668).
 - `npm run dev` → http://localhost:4321 · `npm run build` · `npm run preview`
 - `npm run new-work -- <작품 폴더> [--slug 이름] [--yes] [--force]` — 새 영상 작품 추가(아래 참고)
+- `npm run thumbs` — 빠진 썸네일만 만든다: 이미지 `<id>-sm.webp`(가로 640, 목록 타일 srcset용), 클립 `clips/**/<이름>.webp`(첫 프레임, 상세 Video Clip 목록용). new-work·sync-notion도 새 항목은 자동으로 만든다. **썸네일이 R2에 없으면 사이트에서 이미지가 깨지니 push 전에 upload-media를 먼저 한다.**
 - `npm run sync-notion -- [--dry] [--force] [--photo=값]` — Notion DB의 이미지·프롬프트를 `content/images/`로 가져온다(아래 참고). 토큰은 `.env`의 `NOTION_TOKEN`(Git 제외, 채팅·로그에 출력 금지)
 - 배포: Cloudflare Workers(정적 자산, `wrangler.jsonc`) → https://madelog.teentak.workers.dev. GitHub `TEENTAK/madelog`의 `main`에 push하면 Workers Builds가 `npm run build` → `npx wrangler deploy`를 자동 실행한다. 미디어는 R2 버킷 `madelog-media`(공개 개발 URL, 주소는 `.env.production`의 `PUBLIC_MEDIA_BASE_URL`)에서 불러온다. 도메인은 아직 없다(구입하면 R2 사용자 지정 도메인·Workers 도메인과 `astro.config.mjs`의 `site`, `.env.production`을 바꾼다).
 - 미디어를 추가·변경하면 `npm run upload-media -- madelog-media`로 R2에 올린다(코드 push와 별개). 바뀐 파일만 올리며 기록은 `.r2-manifest-<버킷>.tsv`(Git 제외). `--dry`는 목록만, `--init`은 기록만(이미 다 올라가 있을 때 처음 한 번), `--prune`은 로컬에서 지운 파일을 R2에서도 지운다. 로컬에서 바로 배포할 때는 `npm run deploy`(빌드 후 `dist/media` 제거). 처음엔 `npx wrangler login`이 필요하다.
@@ -20,7 +22,7 @@ content/tags.yaml                 태그 사전: 장르 → 색 이름(없는 �
 media-local/                      Git 제외. R2 경로와 같은 구조. public/media 가 이 폴더를 가리킨다
 src/content.config.ts             스키마(Zod). width/height 필수, 극단 비율은 빌드 경고만
 src/lib/media.ts                  미디어 주소는 여기서만 만든다(PUBLIC_MEDIA_BASE_URL, 기본 /media)
-src/styles/design-system.css      디자인 시스템 v0.8 — 캔버스와 같은 파일(캔버스는 이 파일을 업로드해 연결), 고치면 캔버스도 맞춘다
+src/styles/design-system.css      디자인 시스템 v0.9 — 캔버스와 같은 파일(캔버스는 이 파일을 업로드해 연결), 고치면 캔버스도 맞춘다
 src/styles/pages.css              페이지 전용 배치 규칙
 src/pages/                        / (전체) · /videos · /images · /p/<슬러그>
 src/scripts/                      viewer.ts(공유 뷰어 모달) · hero-motion.ts(전체 탭 히어로) · image-list.ts(이미지 12개씩·필터)
@@ -37,7 +39,7 @@ scripts/sync-notion.mjs           Notion 동기화
 ## 확정된 결정
 - 헤더 메뉴: 전체 / 영상 / 이미지. 푸터 이메일 teentak@gmail.com, 마퀴 모델명은 버전 없는 대표명만(`src/site.ts`: VEO, OMNI FLASH / GPT IMAGE, NANO BANANA). 작품 데이터 `model`에는 실제 버전을 적는다. About 페이지·이메일 수집·로그인·관리자 화면·다국어는 만들지 않는다.
 - 디자인: 화이트·그레이·블랙, 포인트 컬러는 #e4f222, 포인트 위 가는 선은 `--primary-line`(#bcc631, 1px: 로고·eyebrow 점, 주 버튼 보더). 모델 태그와 장르 태그는 같은 폰트. 폰트 Pretendard / Inter Tight / Geist Mono. 태그는 파스텔.
-- 영상 리스트는 줄맞춤(`.gal`), 한 번에 **8개씩** 더 보기. 전체 탭은 고정 3열 그리드(`.vgrid`, 16:9 상자 + 블러 여백). 이미지는 Pinterest식 masonry, 12개씩(첫 로드 후 한 번 자동, 이후 "더 보기" 버튼, 스켈레톤), 모델별 필터 칩, 리소스 포함 토글(리소스가 있을 때만 표시). `PAGE` 값은 `images/index.astro`와 `image-list.ts`가 같아야 한다.
+- 영상 리스트는 줄맞춤(`.gal`), 한 번에 **8개씩** 더 보기(검색·정렬·장르 모두 주소에 반영). 전체 탭은 고정 3열 그리드(`.vgrid`, 16:9 상자 + 블러 여백). 이미지는 Pinterest식 masonry, 12개씩(첫 로드 후 한 번 자동, 이후 "더 보기" 버튼, 스켈레톤), 모델별 필터 칩, 리소스 포함 토글(리소스가 있을 때만 표시). 개수는 `src/site.ts`의 `PAGE_SIZE` 한 곳에서 정한다. masonry 열은 "가장 짧은 열에 넣기"(서버 `toColumns`·클라이언트 `image-list.ts` 같은 규칙). 이미지 모달은 필터에 맞는 전체 목록을 넘기고, 열리지 않은 묶음으로 가면 그 묶음까지 연다.
 - 전체 탭은 최신순 자동(영상 6·이미지 12) + `featured: true`는 앞에 고정. 필터는 주소(`?genre=`)에 반영, 검색은 제목·태그만.
 - **NEW 태그는 쓰지 않는다**(삭제). 히어로의 `LATEST`/`FEATURED` 표시만 남긴다.
 - **영상은 원본보다 크게 확대해 재생하지 않는다.** 영상 해상도는 대부분 720p급(720×1280 / 1280×720)이고 클립 길이는 대부분 6~10초다(30초 넘는 것도 일부 있음).
