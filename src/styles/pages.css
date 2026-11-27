@@ -22,7 +22,7 @@ img.lb-fg{width:auto}
 
 /* 전체 탭 히어로(스크롤 모션 전의 일반 레이아웃) */
 .hero-home .hero-in{display:grid;grid-template-columns:minmax(0,1fr) 720px;gap:56px;align-items:center}
-.hero-home .hero-tx h1{line-height:1;margin:16px 0 0}
+.hero-home .hero-tx h1{font-size:var(--fs-display-1);line-height:1;margin:16px 0 0}
 @media(max-width:1100px){.hero-home .hero-in{grid-template-columns:1fr}}
 
 /* 목록 페이지 히어로(영상·이미지) */

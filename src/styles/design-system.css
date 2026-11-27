@@ -19,7 +19,7 @@
   --font-mono:"Geist Mono",ui-monospace,Menlo,monospace;
   /* 글자 크기 9단계. 작은 글자 4개는 웹·모바일 같은 값, 제목·디스플레이 5개는 화면 폭 390→1240px 사이에서 모바일값→데스크톱값으로 자동 변화(clamp).
      caption 12 mono·태그·배지 | ui 13 버튼·보조 문구 | small 14 메뉴·설명·정보 줄 | body 16 본문·카드 제목
-     h3 20→24 모달 제목·수치 | h2 24→32 섹션 제목·카운터 | h1 32→48 작품 제목 | display-2 40→64 마퀴 | display-1 56→112 히어로 */
+     h3 20→24 모달 제목·수치 | h2 24→32 섹션 제목·카운터 | h1 32→48 작품 제목 | display-2 40→64 목록 히어로·마퀴 | display-1 56→112 전체 탭 히어로 */
   --fs-caption:12px;--fs-ui:13px;--fs-small:14px;--fs-body:16px;
   --fs-h3:clamp(20px,18.16px + .471vw,24px);--fs-h2:clamp(24px,20.33px + .941vw,32px);--fs-h1:clamp(32px,24.66px + 1.882vw,48px);
   --fs-display-2:clamp(40px,28.99px + 2.824vw,64px);--fs-display-1:clamp(56px,30.31px + 6.588vw,112px);
@@ -73,7 +73,8 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .hero-in{padding-block:75px 52px;background:linear-gradient(90deg,#fff 44%,rgba(255,255,255,.82) 72%,rgba(255,255,255,.15))}
 .eyebrow{font:500 var(--fs-caption) var(--font-mono);letter-spacing:.07em;color:var(--muted)}
 .eyebrow::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 1px var(--primary-line);margin-right:9px}
-.hero h1{margin:16px 0 0;font:var(--fw-display) var(--fs-display-1)/1 var(--font-display);letter-spacing:-.03em}
+/* 히어로 제목: 목록·404 는 display-2(40→64). 전체 탭만 display-1(56→112, pages.css .hero-home) — 첫 화면 > 목록 순서를 크기로 드러낸다 */
+.hero h1{margin:16px 0 0;font:var(--fw-display) var(--fs-display-2)/1.05 var(--font-display);letter-spacing:-.03em}
 .hero-sub{margin:21px 0 0;max-width:440px;font-size:var(--fs-small);line-height:1.75;color:var(--muted)}
 @media(max-width:600px){.hero-in{padding-block:56px 41px}}
 
