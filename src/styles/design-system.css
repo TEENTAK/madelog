@@ -104,7 +104,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .vwin.is-playing .vwin__play .i-pause{display:block}
 .vwin__tags,.vwin__time{z-index:2;pointer-events:none}
 .vwin__ctrl{position:absolute;right:16px;top:14px;z-index:2;display:flex;gap:12px}
-.vwin__btn{display:inline-flex;align-items:center;gap:6px;height:var(--btn-sm);padding:0 13px 0 12px;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-pill);background:rgba(17,17,17,.38);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font:var(--fw-ui) var(--fs-ui) var(--font-body);letter-spacing:-.01em;transition:background var(--t-base)}
+.vwin__btn{display:inline-flex;align-items:center;gap:6px;height:var(--btn-sm);padding:0 12.5px;border:1px solid rgba(255,255,255,.55);border-radius:var(--r-pill);background:rgba(17,17,17,.38);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font:var(--fw-ui) var(--fs-ui) var(--font-body);letter-spacing:-.01em;transition:background var(--t-base)}
 .vwin__btn{position:relative}
 .vwin__btn::before{content:"";position:absolute;inset:-6px}/* 터치 영역 44px(보이는 크기 32px) */
 .vwin__btn:hover{background:rgba(17,17,17,.6)}
@@ -134,10 +134,10 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 /* 6. COMPONENTS */
 /* 6.1 BUTTON — 버튼은 모두 알약(radius 999). 크기는 역할로: .chip = sm 32(필터·정렬·복사), .pill = md 40(보조 버튼), .pill--primary·.more .chip = lg 48(주 버튼·더 보기).
    데스크톱은 보이는 크기 그대로(칩은 위아래로 누름 영역 40까지 확장), 터치 기기는 모두 높이 44 */
-.pill,.chip{position:relative;flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:var(--btn-md);padding:0 17px 0 16px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--white);color:var(--body);font-size:var(--fs-ui);font-weight:var(--fw-ui);transition:background var(--t-base),transform var(--t-fast)}
-.chip{min-height:var(--btn-sm);padding:0 13px 0 12px}
+.pill,.chip{position:relative;flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:var(--btn-md);padding:0 16.5px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--white);color:var(--body);font-size:var(--fs-ui);font-weight:var(--fw-ui);transition:background var(--t-base),transform var(--t-fast)}
+.chip{min-height:var(--btn-sm);padding:0 12.5px}
 .chip::before{content:"";position:absolute;inset:-4px 0}
-.pill--primary{min-height:var(--btn-lg);padding:0 23px 0 22px;font-size:var(--fs-small)}
+.pill--primary{min-height:var(--btn-lg);padding:0 22.5px;font-size:var(--fs-small)}
 @media(pointer:coarse){.pill,.chip,.pill--primary{min-height:var(--tap)}.chip::before{display:none}}
 .pill:hover,.chip:hover{background:var(--sf)}
 .pill:active,.chip:active{transform:scale(.96);background:var(--sf-2)}
@@ -150,7 +150,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 .sw[aria-checked="true"] .knob::after{transform:translateX(14px);background:var(--primary)}
 /* 6.3 TAG — 정보 라벨(누를 수 없음). 버튼(알약)과 구분되도록 모서리 6px(--r-tag)·테두리 없음·높이 22px.
    시각 보정: 한글 끝 글자의 세로획이 무거워 오른쪽 여백 +1px, 12px 글자(line-height 1)의 잉크가 위로 치우쳐 위 6px·아래 4px */
-.tag{display:inline-flex;align-items:center;padding:6px 8px 4px 7px;border-radius:var(--r-tag);background:var(--tone,var(--sf));font-size:var(--fs-caption);font-weight:var(--fw-ui);line-height:1;color:var(--tone-ink,var(--ink))}
+.tag{display:inline-flex;align-items:center;padding:5px 7.5px;border-radius:var(--r-tag);background:var(--tone,var(--sf));font-size:var(--fs-caption);font-weight:var(--fw-ui);line-height:1;color:var(--tone-ink,var(--ink))}
 .tag--lime{--tone:var(--tag-lime);--tone-ink:var(--tag-lime-ink)}.tag--lavender{--tone:var(--tag-lavender);--tone-ink:var(--tag-lavender-ink)}.tag--peach{--tone:var(--tag-peach);--tone-ink:var(--tag-peach-ink)}.tag--sky{--tone:var(--tag-sky);--tone-ink:var(--tag-sky-ink)}
 .tag--rose{--tone:var(--tag-rose);--tone-ink:var(--tag-rose-ink)}.tag--mint{--tone:var(--tag-mint);--tone-ink:var(--tag-mint-ink)}.tag--butter{--tone:var(--tag-butter);--tone-ink:var(--tag-butter-ink)}.tag--sand{--tone:var(--tag-sand);--tone-ink:var(--tag-sand-ink)}.tag--periwinkle{--tone:var(--tag-periwinkle);--tone-ink:var(--tag-periwinkle-ink)}
 .tag--model{--tone:var(--sf);--tone-ink:var(--tag-model-ink)}
@@ -297,7 +297,7 @@ nav a.on::after{content:"";position:absolute;left:-2px;right:-2px;bottom:13px;he
 
 /* 6.15 MORE — 목록 하단. 더 보기 버튼(.more > .chip, 불러오는 중은 aria-busy="true") · 마지막 도착(.end 구분선) · 실패(.more-note + 다시 시도) */
 .more{display:flex;flex-direction:column;align-items:center;gap:12px;padding:56px 0 8px}
-.more .chip{min-height:var(--btn-lg);padding:0 25px 0 24px;font-size:var(--fs-small)}
+.more .chip{min-height:var(--btn-lg);padding:0 24.5px;font-size:var(--fs-small)}
 .more .chip::before{display:none}
 .more .chip small{font:500 var(--fs-caption) var(--font-mono);color:var(--caption)}
 .more .chip[aria-busy="true"]{pointer-events:none;color:var(--caption)}
